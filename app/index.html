@@ -728,7 +728,7 @@ function renderCamSelector() {
     btn.innerHTML =
       '<div class="cam-name">' + esc(c.name) + '</div>' +
       '<div class="cam-ip">' + esc(c.ip) + '</div>' +
-      '<div class="cam-online-dot" id="cam-dot-' + i + '"></div>';
+      '<div class="cam-online-dot' + (camOnlineStatus[i] ? ' ' + camOnlineStatus[i] : '') + '" id="cam-dot-' + i + '"></div>';
     btn.onclick = function() { selectedCam = i; renderCamSelector(); };
     el.appendChild(btn);
   });
