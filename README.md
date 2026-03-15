@@ -56,12 +56,48 @@ Your iPad and cameras must be on the same local network. Camera commands are sen
 
 The app is hosted as a static file (GitHub Pages, Netlify, etc.) — the page itself loads from the internet, but all PTZ commands go directly to local IPs.
 
-## Repo Structure
+## Offline Use and PWA
+
+Simple PTZ is a Progressive Web App (PWA). Adding it to your iPad Home Screen is strongly recommended if you plan to use it on a local-only network without internet access.
+
+### Why this matters
+
+Safari aggressively suspends and discards background tabs to save memory. If you switch away from the app during a live stream and come back, Safari may have unloaded it and will try to reload — which fails if you're offline. Running it as a Home Screen app gives it its own process, separate from Safari's tab pool, making suspension much less likely.
+
+### Add to Home Screen
+
+1. Open the app URL in Safari
+2. Tap the **Share** button (⎋ box-with-arrow icon)
+3. Tap **Add to Home Screen**
+4. Tap **Add**
+
+A prompt will also appear automatically the first time you open the app on an iOS device (tap ✕ to dismiss and never show again).
+
+### Service Worker cache
+
+The app includes a Service Worker (`sw.js`) that caches itself on first load. After the initial visit:
+
+- The app loads instantly from local cache on every subsequent open
+- It works fully offline — no internet connection needed to load the UI
+- Camera commands still go directly to camera IPs on your local network as normal
+- When you push an update to GitHub, the Service Worker fetches the new version in the background and activates it on next launch
+
+To force a cache refresh (e.g. after updating the app), bump `CACHE_VERSION` in `sw.js`.
+
+### App icon
+
+The manifest references `icon-192.png` and `icon-512.png` — you'll need to add these to the `app/` directory. Create a 512×512 PNG of the donut logo for best results on all devices. iOS will use it as the Home Screen icon.
+
+
 
 ```
-index.html        # Redirects to ptz/app.html
-ptz/
-  app.html        # Main controller UI
+index.html        # Redirects to app/index.html
+app/
+  index.html      # Main controller UI
+  sw.js           # Service Worker (offline cache)
+  manifest.json   # PWA manifest
+  icon-192.png    # Home Screen icon (192×192)
+  icon-512.png    # Home Screen icon (512×512)
 README.md
 ```
 
