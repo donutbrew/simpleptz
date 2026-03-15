@@ -2,7 +2,7 @@
 // Caches the app shell for offline use and fast reloads.
 // Bump CACHE_VERSION to force a cache refresh after updates.
 
-const CACHE_VERSION = 'simpleptz-v1';
+const CACHE_VERSION = 'simpleptz-v2';
 
 const PRECACHE = [
   './',
