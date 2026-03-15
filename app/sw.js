@@ -2,6 +2,7 @@
 // Caches the app shell for offline use and fast reloads.
 // Bump CACHE_VERSION to force a cache refresh after updates.
 
+const CACHE_PREFIX  = 'simpleptz-';
 const CACHE_VERSION = 'simpleptz-v2';
 
 const PRECACHE = [
@@ -18,13 +19,15 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate: delete old caches from previous versions
+// Activate: delete old simpleptz-* caches only — avoids wiping unrelated
+// caches from other apps sharing the same origin (e.g. other GitHub Pages
+// projects under username.github.io).
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(key => key !== CACHE_VERSION)
+          .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_VERSION)
           .map(key => caches.delete(key))
       )
     ).then(() => self.clients.claim())
