@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PTZ Control</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg: #0a0c10;
+    --panel: #111318;
+    --border: #1e2330;
+    --accent: #00e5ff;
+    --accent2: #ff4d6d;
+    --accent3: #69ff74;
+    --text: #c8d0e0;
+    --text-dim: #4a5270;
+    --active-cam: #00e5ff;
+    --btn-bg: #161b28;
+    --btn-hover: #1e2638;
+    --btn-active: #0a2a3a;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow Condensed', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Grid noise bg */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative; z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--text-dim); }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent3);
+    box-shadow: 0 0 8px var(--accent3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+
+  /* ── Camera Selector ── */
+  .cam-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .cam-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .cam-btn:active { transform: scale(0.96); }
+  .cam-btn.active {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.07);
+    box-shadow: 0 0 12px rgba(0,229,255,0.15);
+  }
+  .cam-btn .cam-num {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--text-dim);
+    line-height: 1;
+  }
+  .cam-btn.active .cam-num { color: var(--accent); }
+  .cam-btn .cam-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .cam-btn.active .cam-label { color: var(--text); }
+  .cam-ip {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+  }
+  .cam-btn.active .cam-ip { color: rgba(0,229,255,0.5); }
+
+  /* ── Main Controls Grid ── */
+  .controls-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+
+  /* ── D-Pad ── */
+  .dpad-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .dpad-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .dpad {
+    display: grid;
+    grid-template-areas:
+      ". up ."
+      "left home right"
+      ". down .";
+    grid-template-columns: 72px 72px 72px;
+    grid-template-rows: 72px 72px 72px;
+    gap: 4px;
+  }
+  .dpad-btn {
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s;
+    -webkit-touch-callout: none;
+  }
+  .dpad-btn:active, .dpad-btn.pressed {
+    background: var(--btn-active);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: inset 0 0 10px rgba(0,229,255,0.1);
+    transform: scale(0.94);
+  }
+  .dpad-btn[data-dir="up"]    { grid-area: up; }
+  .dpad-btn[data-dir="down"]  { grid-area: down; }
+  .dpad-btn[data-dir="left"]  { grid-area: left; }
+  .dpad-btn[data-dir="right"] { grid-area: right; }
+  .dpad-btn[data-dir="home"]  { grid-area: home; font-size: 14px; font-family: var(--mono); color: var(--text-dim); }
+  .dpad-btn[data-dir="home"]:active { color: var(--accent3); border-color: var(--accent3); }
+
+  /* ── Center Divider ── */
+  .center-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 22px;
+  }
+  .center-col .section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    height: 60px;
+  }
+
+  /* ── Speed Slider ── */
+  .speed-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .speed-panel-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .speed-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .speed-row label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    width: 28px;
+    text-transform: uppercase;
+  }
+  .speed-row .val {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    width: 22px;
+    text-align: right;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(0,229,255,0.4);
+    cursor: pointer;
+  }
+
+  /* ── Zoom/Focus Strips ── */
+  .strip-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .strip-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .btn-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .strip-btn {
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 14px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .strip-btn .icon { font-size: 16px; }
+  .strip-btn:active, .strip-btn.pressed {
+    background: var(--btn-active);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: scale(0.95);
+  }
+  .strip-btn.zoom { border-color: rgba(255,77,109,0.3); }
+  .strip-btn.zoom:active { border-color: var(--accent2); color: var(--accent2); background: rgba(255,77,109,0.08); }
+  .strip-btn.focus { border-color: rgba(105,255,116,0.2); }
+  .strip-btn.focus:active { border-color: var(--accent3); color: var(--accent3); background: rgba(105,255,116,0.06); }
+
+  /* ── Presets ── */
+  .presets-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .presets-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .presets-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .preset-mode-toggle {
+    display: flex;
+    gap: 4px;
+  }
+  .mode-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .mode-btn.active {
+    border-color: var(--accent3);
+    color: var(--accent3);
+    background: rgba(105,255,116,0.06);
+  }
+  .presets-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+  }
+  .preset-btn {
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 10px 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .preset-btn:active {
+    transform: scale(0.93);
+    background: var(--btn-active);
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+  .preset-btn.set-mode:active {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(255,77,109,0.08);
+  }
+
+  /* ── Toast ── */
+  #toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(0,0,0,0.85);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  #toast.ok { border-color: var(--accent3); color: var(--accent3); }
+  #toast.err { border-color: var(--accent2); color: var(--accent2); }
+
+  /* ── Settings Modal ── */
+  .settings-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-size: 16px;
+    width: 32px; height: 32px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .settings-btn:active { border-color: var(--accent); color: var(--accent); }
+
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .cam-config-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+  .cam-config-row .row-num {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .cfg-input {
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 8px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .cfg-input:focus { border-color: var(--accent); }
+  .cfg-input::placeholder { color: var(--text-dim); }
+  .cfg-headers {
+    display: grid;
+    grid-template-columns: 24px 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .cfg-headers span {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .modal-btn {
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .modal-btn.primary {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.06);
+  }
+  .modal-btn:active { transform: scale(0.97); }
+
+  /* Selected camera indicator strip */
+  .cam-active-bar {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    border-radius: 1px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cam-active-bar.visible { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .dpad { grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px 64px; }
+    .controls-row { grid-template-columns: 1fr 4px 1fr; }
+    .presets-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="logo">PTZ<span>/</span>CTRL &nbsp;<span style="font-size:9px;letter-spacing:1px;">SMTAV</span></div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div class="status-dot" id="statusDot"></div>
+      <button class="settings-btn" onclick="openSettings()" title="Configure Cameras">⚙</button>
+    </div>
+  </header>
+
+  <!-- Camera Selector -->
+  <div class="cam-selector" id="camSelector"></div>
+  <div class="cam-active-bar visible" id="activeBar"></div>
+
+  <!-- Main Controls -->
+  <div class="controls-row">
+    <!-- D-Pad -->
+    <div class="dpad-wrap">
+      <div class="dpad-label">Pan / Tilt</div>
+      <div class="dpad">
+        <button class="dpad-btn" data-dir="up"
+          data-cmd-start="up" data-cmd-stop="ptzstop">▲</button>
+        <button class="dpad-btn" data-dir="left"
+          data-cmd-start="left" data-cmd-stop="ptzstop">◀</button>
+        <button class="dpad-btn" data-dir="home"
+          onclick="sendHome()">HOME</button>
+        <button class="dpad-btn" data-dir="right"
+          data-cmd-start="right" data-cmd-stop="ptzstop">▶</button>
+        <button class="dpad-btn" data-dir="down"
+          data-cmd-start="down" data-cmd-stop="ptzstop">▼</button>
+      </div>
+    </div>
+
+    <!-- Center spacer -->
+    <div style="width:1px;background:var(--border);align-self:stretch;margin:22px 0 0;"></div>
+
+    <!-- Zoom + Focus -->
+    <div class="strip-col">
+      <div class="strip-label">Zoom</div>
+      <div class="btn-strip">
+        <button class="strip-btn zoom"
+          data-cmd-start="zoomin" data-cmd-stop="zoomstop" data-type="zoom">
+          <span class="icon">🔍</span> TELE
+        </button>
+        <button class="strip-btn zoom"
+          data-cmd-start="zoomout" data-cmd-stop="zoomstop" data-type="zoom">
+          <span class="icon">🔭</span> WIDE
+        </button>
+      </div>
+
+      <div class="strip-label" style="margin-top:4px;">Focus</div>
+      <div class="btn-strip">
+        <button class="strip-btn focus"
+          data-cmd-start="focusin" data-cmd-stop="focusstop" data-type="focus">
+          NEAR
+        </button>
+        <button class="strip-btn focus"
+          data-cmd-start="focusout" data-cmd-stop="focusstop" data-type="focus">
+          FAR
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Speed Panel -->
+  <div class="speed-panel">
+    <div class="speed-panel-title">Speed</div>
+    <div class="speed-row">
+      <label>PAN</label>
+      <input type="range" id="panSpeed" min="1" max="24" value="8" oninput="document.getElementById('panSpeedVal').textContent=this.value">
+      <div class="val" id="panSpeedVal">8</div>
+    </div>
+    <div class="speed-row">
+      <label>TILT</label>
+      <input type="range" id="tiltSpeed" min="1" max="20" value="6" oninput="document.getElementById('tiltSpeedVal').textContent=this.value">
+      <div class="val" id="tiltSpeedVal">6</div>
+    </div>
+    <div class="speed-row">
+      <label>ZOOM</label>
+      <input type="range" id="zoomSpeed" min="1" max="7" value="3" oninput="document.getElementById('zoomSpeedVal').textContent=this.value">
+      <div class="val" id="zoomSpeedVal">3</div>
+    </div>
+  </div>
+
+  <!-- Presets -->
+  <div class="presets-section">
+    <div class="presets-header">
+      <div class="presets-title">Presets</div>
+      <div class="preset-mode-toggle">
+        <button class="mode-btn active" id="modeBtnCall" onclick="setPresetMode('call')">CALL</button>
+        <button class="mode-btn" id="modeBtnSet" onclick="setPresetMode('set')">SET</button>
+      </div>
+    </div>
+    <div class="presets-grid" id="presetsGrid"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-title">Camera Configuration</div>
+    <div class="cfg-headers">
+      <span></span><span>Name</span><span>IP Address</span><span>User:Pass</span>
+    </div>
+    <div id="camConfigRows"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeSettings()">Cancel</button>
+      <button class="modal-btn primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────
+const DEFAULT_CAMS = [
+  { name: 'CAM 1', ip: '192.168.100.51', user: 'admin', pass: 'admin' },
+  { name: 'CAM 2', ip: '192.168.100.52', user: 'admin', pass: 'admin' },
+  { name: 'CAM 3', ip: '192.168.100.53', user: 'admin', pass: 'admin' },
+  { name: 'CAM 4', ip: '192.168.100.54', user: 'admin', pass: 'admin' },
+];
+
+let cameras = loadCameras();
+let selectedCam = 0;
+let presetMode = 'call';
+const NUM_PRESETS = 12;
+
+function loadCameras() {
+  try {
+    const s = localStorage.getItem('ptz_cameras');
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_CAMS));
+}
+
+function saveCameras() {
+  try { localStorage.setItem('ptz_cameras', JSON.stringify(cameras)); } catch(e) {}
+}
+
+// ── Camera selector render ─────────────────────────────────────────
+function renderCamSelector() {
+  const el = document.getElementById('camSelector');
+  el.innerHTML = '';
+  cameras.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cam-btn' + (i === selectedCam ? ' active' : '');
+    btn.innerHTML = `
+      <div class="cam-num">${i+1}</div>
+      <div class="cam-label">${c.name}</div>
+      <div class="cam-ip">${c.ip}</div>
+    `;
+    btn.onclick = () => { selectedCam = i; renderCamSelector(); };
+    el.appendChild(btn);
+  });
+}
+
+// ── Presets render ─────────────────────────────────────────────────
+function renderPresets() {
+  const grid = document.getElementById('presetsGrid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= NUM_PRESETS; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn' + (presetMode === 'set' ? ' set-mode' : '');
+    btn.textContent = i;
+    btn.onclick = () => handlePreset(i);
+    grid.appendChild(btn);
+  }
+}
+
+function setPresetMode(mode) {
+  presetMode = mode;
+  document.getElementById('modeBtnCall').classList.toggle('active', mode === 'call');
+  document.getElementById('modeBtnSet').classList.toggle('active', mode === 'set');
+  renderPresets();
+}
+
+function handlePreset(num) {
+  const action = presetMode === 'call' ? 'poscall' : 'posset';
+  sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&${action}&${num}`);
+  if (presetMode === 'set') {
+    showToast(`Preset ${num} set`, 'ok');
+  } else {
+    showToast(`Preset ${num}`, 'ok');
+  }
+}
+
+// ── HTTP CGI send ──────────────────────────────────────────────────
+function camUrl(path) {
+  const c = cameras[selectedCam];
+  return `http://${c.user}:${c.pass}@${c.ip}${path}`;
+}
+
+function sendPTZ(path) {
+  const c = cameras[selectedCam];
+  if (!c.ip) { showToast('No camera IP set', 'err'); return; }
+  const url = `http://${c.ip}${path}`;
+  fetch(url, {
+    credentials: 'include',
+    headers: {
+      'Authorization': 'Basic ' + btoa(`${c.user}:${c.pass}`)
+    },
+    mode: 'no-cors',  // cameras typically don't send CORS headers
+  }).catch(() => {
+    // no-cors mode swallows errors — command likely sent
+  });
+}
+
+function sendHome() {
+  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&home');
+  showToast('Home', 'ok');
+}
+
+// ── PTZ move (hold to move, release to stop) ───────────────────────
+function getPanSpeed()  { return document.getElementById('panSpeed').value; }
+function getTiltSpeed() { return document.getElementById('tiltSpeed').value; }
+function getZoomSpeed() { return document.getElementById('zoomSpeed').value; }
+
+function startMove(btn) {
+  const start = btn.dataset.cmdStart;
+  const type  = btn.dataset.type;
+  btn.classList.add('pressed');
+
+  if (type === 'zoom') {
+    sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&${start}&${getZoomSpeed()}`);
+  } else if (type === 'focus') {
+    sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&${start}&${getZoomSpeed()}`);
+  } else {
+    // pan/tilt direction
+    sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&${start}&${getPanSpeed()}&${getTiltSpeed()}`);
+  }
+}
+
+function stopMove(btn) {
+  const stop = btn.dataset.cmdStop;
+  btn.classList.remove('pressed');
+  if (!stop) return;
+  if (btn.dataset.type === 'zoom') {
+    sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&zoomstop`);
+  } else if (btn.dataset.type === 'focus') {
+    sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&focusstop`);
+  } else {
+    sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&ptzstop&0&0`);
+  }
+}
+
+// Attach press/release to all move buttons
+document.querySelectorAll('[data-cmd-start]').forEach(btn => {
+  ['touchstart','mousedown'].forEach(ev => {
+    btn.addEventListener(ev, e => { e.preventDefault(); startMove(btn); });
+  });
+  ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev => {
+    btn.addEventListener(ev, e => { e.preventDefault(); stopMove(btn); });
+  });
+});
+
+// ── Toast ──────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 1800);
+}
+
+// ── Settings Modal ─────────────────────────────────────────────────
+function openSettings() {
+  const rows = document.getElementById('camConfigRows');
+  rows.innerHTML = '';
+  cameras.forEach((c, i) => {
+    const row = document.createElement('div');
+    row.className = 'cam-config-row';
+    row.innerHTML = `
+      <span class="row-num">${i+1}</span>
+      <input class="cfg-input" placeholder="CAM ${i+1}" value="${c.name}" data-field="name" data-idx="${i}">
+      <input class="cfg-input" placeholder="192.168.100.5${i+1}" value="${c.ip}" data-field="ip" data-idx="${i}">
+      <input class="cfg-input" placeholder="admin:admin" value="${c.user}:${c.pass}" data-field="creds" data-idx="${i}">
+    `;
+    rows.appendChild(row);
+  });
+  document.getElementById('settingsModal').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
+}
+
+function saveSettings() {
+  document.querySelectorAll('[data-field]').forEach(inp => {
+    const i = parseInt(inp.dataset.idx);
+    const f = inp.dataset.field;
+    if (f === 'name') cameras[i].name = inp.value || `CAM ${i+1}`;
+    if (f === 'ip')   cameras[i].ip   = inp.value;
+    if (f === 'creds') {
+      const [u, ...pp] = inp.value.split(':');
+      cameras[i].user = u || 'admin';
+      cameras[i].pass = pp.join(':') || 'admin';
+    }
+  });
+  saveCameras();
+  renderCamSelector();
+  closeSettings();
+  showToast('Settings saved', 'ok');
+}
+
+// Close modal on overlay click
+document.getElementById('settingsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
+
+// ── Init ───────────────────────────────────────────────────────────
+renderCamSelector();
+renderPresets();
+</script>
+</body>
+</html>
