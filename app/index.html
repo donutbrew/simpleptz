@@ -214,6 +214,7 @@
     color: var(--text-dim);
     text-transform: uppercase;
   }
+  /* 4-way dpad */
   .dpad {
     display: grid;
     grid-template-areas:
@@ -223,6 +224,13 @@
     grid-template-columns: 72px 72px 72px;
     grid-template-rows: 72px 72px 72px;
     gap: 4px;
+  }
+  /* 8-way dpad */
+  .dpad.dpad-8way {
+    grid-template-areas:
+      "leftup up rightup"
+      "left home right"
+      "leftdown down rightdown";
   }
   .dpad-btn {
     background: var(--btn-bg);
@@ -244,12 +252,122 @@
     box-shadow: inset 0 0 10px rgba(0,229,255,0.1);
     transform: scale(0.94);
   }
-  .dpad-btn[data-dir="up"]    { grid-area: up; }
-  .dpad-btn[data-dir="down"]  { grid-area: down; }
-  .dpad-btn[data-dir="left"]  { grid-area: left; }
-  .dpad-btn[data-dir="right"] { grid-area: right; }
-  .dpad-btn[data-dir="home"]  { grid-area: home; font-size: 13px; font-family: var(--mono); color: var(--text-dim); }
+  .dpad-btn[data-dir="up"]        { grid-area: up; }
+  .dpad-btn[data-dir="down"]      { grid-area: down; }
+  .dpad-btn[data-dir="left"]      { grid-area: left; }
+  .dpad-btn[data-dir="right"]     { grid-area: right; }
+  .dpad-btn[data-dir="leftup"]    { grid-area: leftup;    font-size: 17px; color: var(--accent); opacity: 0.7; }
+  .dpad-btn[data-dir="rightup"]   { grid-area: rightup;   font-size: 17px; color: var(--accent); opacity: 0.7; }
+  .dpad-btn[data-dir="leftdown"]  { grid-area: leftdown;  font-size: 17px; color: var(--accent); opacity: 0.7; }
+  .dpad-btn[data-dir="rightdown"] { grid-area: rightdown; font-size: 17px; color: var(--accent); opacity: 0.7; }
+  .dpad-btn[data-dir="home"]      { grid-area: home; font-size: 13px; font-family: var(--mono); color: var(--text-dim); }
   .dpad-btn[data-dir="home"]:active { color: var(--accent3); border-color: var(--accent3); }
+  .dpad-btn.diag:active, .dpad-btn.diag.pressed { opacity: 1; }
+
+  /* ── Joystick ── */
+  .joystick-wrap {
+    position: relative;
+    width: 220px; height: 220px;
+    flex-shrink: 0;
+  }
+  .joy-ring {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+  }
+  .joy-crosshair::before, .joy-crosshair::after {
+    content: '';
+    position: absolute;
+    background: var(--border);
+  }
+  .joy-crosshair::before { left: 50%; top: 10%; width: 1px; height: 80%; transform: translateX(-50%); }
+  .joy-crosshair::after  { top: 50%; left: 10%; height: 1px; width: 80%; transform: translateY(-50%); }
+  .joy-deadzone {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px dashed var(--border);
+    pointer-events: none;
+  }
+  .joy-dir-label {
+    position: absolute;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .joy-dir-label.top    { top: 8px;    left: 50%; transform: translateX(-50%); }
+  .joy-dir-label.bottom { bottom: 8px; left: 50%; transform: translateX(-50%); }
+  .joy-dir-label.left   { left: 8px;   top: 50%;  transform: translateY(-50%); }
+  .joy-dir-label.right  { right: 8px;  top: 50%;  transform: translateY(-50%); }
+  .joy-puck {
+    position: absolute;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--btn-bg);
+    border: 2px solid var(--accent);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    touch-action: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.1s, background 0.1s;
+  }
+  .joy-puck.active {
+    cursor: grabbing;
+    background: var(--btn-active);
+  }
+  .joy-puck-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.1s;
+    pointer-events: none;
+  }
+  .joy-puck.active .joy-puck-dot { transform: scale(1.3); }
+  .joy-readout {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: center;
+    min-height: 14px;
+    letter-spacing: 1px;
+  }
+  .joy-val { color: var(--accent); }
+
+  /* ── Control mode toggle ── */
+  .dpad-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ctrl-mode-toggle {
+    display: flex;
+    background: var(--btn-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .ctrl-mode-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .ctrl-mode-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+  }
 
   /* ── Zoom/Focus Strips ── */
   .strip-col {
@@ -590,13 +708,51 @@
   <!-- Main Controls -->
   <div class="controls-row">
     <div class="dpad-wrap">
-      <div class="dpad-label">Pan / Tilt</div>
-      <div class="dpad">
+      <!-- Mode toggle header -->
+      <div class="dpad-header">
+        <div class="dpad-label">Pan / Tilt</div>
+        <div class="ctrl-mode-toggle">
+          <button class="ctrl-mode-btn" id="ctrlBtn4"  onclick="setCtrlMode('dpad4')">4-WAY</button>
+          <button class="ctrl-mode-btn" id="ctrlBtn8"  onclick="setCtrlMode('dpad8')">8-WAY</button>
+          <button class="ctrl-mode-btn" id="ctrlBtnJoy" onclick="setCtrlMode('joy')">JOY</button>
+        </div>
+      </div>
+
+      <!-- 4-way D-pad -->
+      <div class="dpad" id="ctrl-dpad4">
         <button class="dpad-btn" data-dir="up"    data-cmd-start="up"    data-cmd-stop="ptzstop">▲</button>
         <button class="dpad-btn" data-dir="left"  data-cmd-start="left"  data-cmd-stop="ptzstop">◀</button>
         <button class="dpad-btn" data-dir="home"  onclick="sendHome()">HOME</button>
         <button class="dpad-btn" data-dir="right" data-cmd-start="right" data-cmd-stop="ptzstop">▶</button>
         <button class="dpad-btn" data-dir="down"  data-cmd-start="down"  data-cmd-stop="ptzstop">▼</button>
+      </div>
+
+      <!-- 8-way D-pad -->
+      <div class="dpad dpad-8way" id="ctrl-dpad8" style="display:none;">
+        <button class="dpad-btn diag" data-dir="leftup"    data-cmd-start="leftup"    data-cmd-stop="ptzstop">↖</button>
+        <button class="dpad-btn"      data-dir="up"        data-cmd-start="up"        data-cmd-stop="ptzstop">▲</button>
+        <button class="dpad-btn diag" data-dir="rightup"   data-cmd-start="rightup"   data-cmd-stop="ptzstop">↗</button>
+        <button class="dpad-btn"      data-dir="left"      data-cmd-start="left"      data-cmd-stop="ptzstop">◀</button>
+        <button class="dpad-btn"      data-dir="home"      onclick="sendHome()">HOME</button>
+        <button class="dpad-btn"      data-dir="right"     data-cmd-start="right"     data-cmd-stop="ptzstop">▶</button>
+        <button class="dpad-btn diag" data-dir="leftdown"  data-cmd-start="leftdown"  data-cmd-stop="ptzstop">↙</button>
+        <button class="dpad-btn"      data-dir="down"      data-cmd-start="down"      data-cmd-stop="ptzstop">▼</button>
+        <button class="dpad-btn diag" data-dir="rightdown" data-cmd-start="rightdown" data-cmd-stop="ptzstop">↘</button>
+      </div>
+
+      <!-- Joystick -->
+      <div id="ctrl-joy" style="display:none; flex-direction:column; align-items:center; gap:6px;">
+        <div class="joystick-wrap" id="joystick">
+          <div class="joy-ring"></div>
+          <div class="joy-crosshair"></div>
+          <div class="joy-deadzone"></div>
+          <div class="joy-dir-label top">T</div>
+          <div class="joy-dir-label bottom">D</div>
+          <div class="joy-dir-label left">L</div>
+          <div class="joy-dir-label right">R</div>
+          <div class="joy-puck" id="joyPuck"><div class="joy-puck-dot"></div></div>
+        </div>
+        <div class="joy-readout" id="joyReadout">drag to move</div>
       </div>
     </div>
 
@@ -769,6 +925,26 @@ function sendPTZ(path) {
 }
 function sendHome() { sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&home'); showToast('Home', 'ok'); }
 
+// ── Control mode (4way / 8way / joy) ──────────────────────────────
+let ctrlMode = 'dpad4';
+
+function loadCtrlMode() {
+  setCtrlMode(localStorage.getItem('ptz_ctrl_mode') || 'dpad4', false);
+}
+
+function setCtrlMode(mode, save=true) {
+  ctrlMode = mode;
+  document.getElementById('ctrl-dpad4').style.display = mode === 'dpad4' ? 'grid'  : 'none';
+  document.getElementById('ctrl-dpad8').style.display = mode === 'dpad8' ? 'grid'  : 'none';
+  document.getElementById('ctrl-joy').style.display   = mode === 'joy'   ? 'flex'  : 'none';
+  document.getElementById('ctrlBtn4').classList.toggle('active',   mode === 'dpad4');
+  document.getElementById('ctrlBtn8').classList.toggle('active',   mode === 'dpad8');
+  document.getElementById('ctrlBtnJoy').classList.toggle('active', mode === 'joy');
+  if (save) localStorage.setItem('ptz_ctrl_mode', mode);
+  // Rebind move buttons whenever mode changes
+  bindMoveButtons();
+}
+
 // ── Move buttons ───────────────────────────────────────────────────
 const getPan  = () => document.getElementById('panSpeed').value;
 const getTilt = () => document.getElementById('tiltSpeed').value;
@@ -788,10 +964,147 @@ function stopMove(btn) {
   else if (btn.dataset.type === 'focus') sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&focusstop');
   else                                   sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&ptzstop&0&0');
 }
-document.querySelectorAll('[data-cmd-start]').forEach(btn => {
-  ['touchstart','mousedown'].forEach(ev => btn.addEventListener(ev, e => { e.preventDefault(); startMove(btn); }));
-  ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev => btn.addEventListener(ev, e => { e.preventDefault(); stopMove(btn); }));
-});
+
+function bindMoveButtons() {
+  // Unbind all existing listeners by replacing nodes (simplest safe approach)
+  document.querySelectorAll('[data-cmd-start]').forEach(btn => {
+    const clone = btn.cloneNode(true);
+    btn.parentNode.replaceChild(clone, btn);
+  });
+  // Bind fresh
+  document.querySelectorAll('[data-cmd-start]').forEach(btn => {
+    ['touchstart','mousedown'].forEach(ev =>
+      btn.addEventListener(ev, e => { e.preventDefault(); startMove(btn); }));
+    ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev =>
+      btn.addEventListener(ev, e => { e.preventDefault(); stopMove(btn); }));
+  });
+}
+
+// ── Joystick ───────────────────────────────────────────────────────
+(function initJoystick() {
+  const JOY_R   = 110;  // radius of ring (half of 220px)
+  const DEAD    = 18;   // deadzone radius
+  const PUCK_R  = 28;   // half puck width
+  const MAX_R   = JOY_R - PUCK_R;
+  const INTERVAL = 80; // ms between repeat commands while held
+
+  let dragging = false;
+  let joyInterval = null;
+  let lastPanCmd = 0, lastTiltCmd = 0;
+
+  function getJoyEl()     { return document.getElementById('joystick'); }
+  function getPuckEl()    { return document.getElementById('joyPuck'); }
+  function getReadoutEl() { return document.getElementById('joyReadout'); }
+
+  function joyXY(e) {
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX, y: t.clientY };
+  }
+
+  function applyPuck(cx, cy) {
+    const joy = getJoyEl();
+    if (!joy) return;
+    const rect = joy.getBoundingClientRect();
+    const dx = cx - (rect.left + JOY_R);
+    const dy = cy - (rect.top  + JOY_R);
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const angle = Math.atan2(dy, dx);
+    const clamped = Math.min(dist, MAX_R);
+    const px = Math.cos(angle) * clamped;
+    const py = Math.sin(angle) * clamped;
+
+    const puck = getPuckEl();
+    puck.style.left = (JOY_R + px) + 'px';
+    puck.style.top  = (JOY_R + py) + 'px';
+
+    if (dist < DEAD) {
+      lastPanCmd = 0; lastTiltCmd = 0;
+      getReadoutEl().innerHTML = 'centered';
+      return;
+    }
+
+    // Map to pan/tilt speeds using speed slider maxes
+    const ratio = clamped / MAX_R;
+    const panMax  = parseInt(getPan());
+    const tiltMax = parseInt(getTilt());
+    // dx positive = right, dy positive = down
+    lastPanCmd  = Math.round(Math.cos(angle) * panMax  * ratio);
+    lastTiltCmd = Math.round(Math.sin(angle) * tiltMax * ratio);
+
+    const pct = Math.round(ratio * 100);
+    const deg = Math.round(((angle * 180 / Math.PI) + 360) % 360);
+    const dirs = ['R','↗','U','↖','L','↙','D','↘'];
+    const dLabel = dirs[Math.round(deg / 45) % 8];
+    getReadoutEl().innerHTML = `<span class="joy-val">${dLabel}</span> ${pct}%`;
+  }
+
+  function sendJoyCmd() {
+    if (lastPanCmd === 0 && lastTiltCmd === 0) return;
+    // Build ABS-direction command using pan/tilt signs
+    // Use REL move with signed speeds: positive pan = right, positive tilt = down
+    const panAbs  = Math.abs(lastPanCmd);
+    const tiltAbs = Math.abs(lastTiltCmd);
+    // Determine cardinal/diagonal from signs
+    const h = lastPanCmd  > 0 ? 'right' : lastPanCmd  < 0 ? 'left' : '';
+    const v = lastTiltCmd > 0 ? 'down'  : lastTiltCmd < 0 ? 'up'   : '';
+    let action = '';
+    if      (h && v) action = v + (h === 'right' ? 'right' : 'left'); // e.g. "downright" — but API uses "rightdown"
+    else if (h)      action = h;
+    else if (v)      action = v;
+    // SMTAV API diagonal format: leftup, rightup, leftdown, rightdown
+    // Normalise: always [left|right][up|down]
+    if (h && v) action = h + v;
+    sendPTZ(`/cgi-bin/ptzctrl.cgi?ptzcmd&${action}&${panAbs || 1}&${tiltAbs || 1}`);
+  }
+
+  function startJoy(e) {
+    const puck = getPuckEl();
+    if (!puck) return;
+    dragging = true;
+    puck.classList.add('active');
+    applyPuck(joyXY(e).x, joyXY(e).y);
+    joyInterval = setInterval(sendJoyCmd, INTERVAL);
+    e.preventDefault();
+  }
+
+  function moveJoy(e) {
+    if (!dragging) return;
+    applyPuck(joyXY(e).x, joyXY(e).y);
+    e.preventDefault();
+  }
+
+  function endJoy() {
+    if (!dragging) return;
+    dragging = false;
+    clearInterval(joyInterval);
+    joyInterval = null;
+    lastPanCmd = 0; lastTiltCmd = 0;
+    sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&ptzstop&0&0');
+    const puck = getPuckEl();
+    if (puck) {
+      puck.classList.remove('active');
+      puck.style.left = JOY_R + 'px';
+      puck.style.top  = JOY_R + 'px';
+    }
+    const ro = getReadoutEl();
+    if (ro) ro.innerHTML = 'drag to move';
+  }
+
+  // Attach to document so drag works outside the puck
+  document.addEventListener('mouseup',     endJoy);
+  document.addEventListener('touchend',    endJoy);
+  document.addEventListener('touchcancel', endJoy);
+  document.addEventListener('mousemove',   moveJoy);
+  document.addEventListener('touchmove',   moveJoy, { passive: false });
+
+  // Puck listeners attached after DOM ready (called from init)
+  window._bindJoyPuck = function() {
+    const puck = getPuckEl();
+    if (!puck) return;
+    puck.addEventListener('mousedown',  startJoy);
+    puck.addEventListener('touchstart', startJoy, { passive: false });
+  };
+})();
 
 // ── Toast ──────────────────────────────────────────────────────────
 let toastTimer;
@@ -909,8 +1222,10 @@ function esc(s) {
 
 // ── Init ───────────────────────────────────────────────────────────
 loadTheme();
+loadCtrlMode();
 renderCamSelector();
 renderPresets();
+window._bindJoyPuck();
 
 // ── PWA install banner ─────────────────────────────────────────────
 (function() {
