@@ -118,11 +118,12 @@ header {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 8px 6px;
   cursor: pointer;
   transition: all 0.15s;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
   min-width: 70px; flex: 1 1 70px; max-width: 120px;
+  container-type: inline-size;
 }
 .cam-btn:active { transform: scale(0.96); }
 .cam-btn.active {
@@ -131,14 +132,19 @@ header {
   box-shadow: 0 0 12px var(--shadow-accent);
 }
 :root.light .cam-btn.active { background: rgba(0,119,204,0.07); }
-.cam-num  { font-family: var(--mono); font-size: 18px; color: var(--text-dim); line-height: 1; }
-.cam-btn.active .cam-num { color: var(--accent); }
-.cam-label {
-  font-family: var(--sans); font-size: 10px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+.cam-name {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: clamp(9px, 3.5cqi, 18px);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.2;
+  width: 100%;
 }
-.cam-btn.active .cam-label { color: var(--text); }
+.cam-btn.active .cam-name { color: var(--text); }
 .cam-ip { font-family: var(--mono); font-size: 8px; color: var(--text-dim); }
 .cam-btn.active .cam-ip { color: var(--accent); opacity: 0.6; }
 .cam-online-dot {
@@ -719,8 +725,7 @@ function renderCamSelector() {
     const btn = document.createElement('button');
     btn.className = 'cam-btn' + (i === selectedCam ? ' active' : '');
     btn.innerHTML =
-      '<div class="cam-num">' + (i+1) + '</div>' +
-      '<div class="cam-label">' + esc(c.name) + '</div>' +
+      '<div class="cam-name">' + esc(c.name) + '</div>' +
       '<div class="cam-ip">' + esc(c.ip) + '</div>' +
       '<div class="cam-online-dot" id="cam-dot-' + i + '"></div>';
     btn.onclick = function() { selectedCam = i; renderCamSelector(); };
