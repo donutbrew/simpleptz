@@ -118,11 +118,13 @@ header {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 4px 4px;
   cursor: pointer;
   transition: all 0.15s;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
   min-width: 70px; flex: 1 1 70px; max-width: 120px;
+  min-height: 60px;
+  container-type: inline-size;
 }
 .cam-btn:active { transform: scale(0.96); }
 .cam-btn.active {
@@ -131,17 +133,29 @@ header {
   box-shadow: 0 0 12px var(--shadow-accent);
 }
 :root.light .cam-btn.active { background: rgba(0,119,204,0.07); }
-.cam-num  { font-family: var(--mono); font-size: 18px; color: var(--text-dim); line-height: 1; }
-.cam-btn.active .cam-num { color: var(--accent); }
-.cam-label {
-  font-family: var(--sans); font-size: 10px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+.cam-name {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: clamp(13px, 7cqi, 32px);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.15;
+  width: 100%;
 }
-.cam-btn.active .cam-label { color: var(--text); }
+.cam-btn.active .cam-name { color: var(--text); }
 .cam-ip { font-family: var(--mono); font-size: 8px; color: var(--text-dim); }
 .cam-btn.active .cam-ip { color: var(--accent); opacity: 0.6; }
-
+.cam-online-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+  transition: background 0.4s, box-shadow 0.4s;
+}
+.cam-online-dot.online  { background: var(--accent3); box-shadow: 0 0 5px var(--accent3); }
+.cam-online-dot.offline { background: var(--accent2); box-shadow: none; }
 /* Controls row */
 .controls-row {
   display: grid;
@@ -577,19 +591,19 @@ input[type=range]::-webkit-slider-thumb {
     <div class="speed-row">
       <label>PAN</label>
       <input type="range" id="panSpeed" min="1" max="24" value="8"
-        oninput="document.getElementById('panSpeedVal').textContent=this.value">
+        oninput="document.getElementById('panSpeedVal').textContent=this.value; localStorage.setItem('ptz_pan_speed',this.value)">
       <div class="speed-val" id="panSpeedVal">8</div>
     </div>
     <div class="speed-row">
       <label>TILT</label>
       <input type="range" id="tiltSpeed" min="1" max="20" value="6"
-        oninput="document.getElementById('tiltSpeedVal').textContent=this.value">
+        oninput="document.getElementById('tiltSpeedVal').textContent=this.value; localStorage.setItem('ptz_tilt_speed',this.value)">
       <div class="speed-val" id="tiltSpeedVal">6</div>
     </div>
     <div class="speed-row">
       <label>ZOOM</label>
       <input type="range" id="zoomSpeed" min="1" max="7" value="3"
-        oninput="document.getElementById('zoomSpeedVal').textContent=this.value">
+        oninput="document.getElementById('zoomSpeedVal').textContent=this.value; localStorage.setItem('ptz_zoom_speed',this.value)">
       <div class="speed-val" id="zoomSpeedVal">3</div>
     </div>
   </div>
@@ -712,9 +726,9 @@ function renderCamSelector() {
     const btn = document.createElement('button');
     btn.className = 'cam-btn' + (i === selectedCam ? ' active' : '');
     btn.innerHTML =
-      '<div class="cam-num">' + (i+1) + '</div>' +
-      '<div class="cam-label">' + esc(c.name) + '</div>' +
-      '<div class="cam-ip">' + esc(c.ip) + '</div>';
+      '<div class="cam-name">' + esc(c.name) + '</div>' +
+      '<div class="cam-ip">' + esc(c.ip) + '</div>' +
+      '<div class="cam-online-dot' + (camOnlineStatus[i] ? ' ' + camOnlineStatus[i] : '') + '" id="cam-dot-' + i + '"></div>';
     btn.onclick = function() { selectedCam = i; renderCamSelector(); };
     el.appendChild(btn);
   });
@@ -738,6 +752,7 @@ function setPresetMode(mode) {
   presetMode = mode;
   document.getElementById('modeBtnCall').classList.toggle('active', mode === 'call');
   document.getElementById('modeBtnSet').classList.toggle('active',  mode === 'set');
+  localStorage.setItem('ptz_preset_mode', mode);
   renderPresets();
 }
 function handlePreset(num) {
@@ -971,6 +986,7 @@ function saveSettings() {
   renderCamSelector();
   closeSettings();
   showToast('Settings saved', 'ok');
+  pingAllCameras();
 }
 document.getElementById('settingsModal').addEventListener('click', function(e) {
   if (e.target === this) closeSettings();
@@ -1001,13 +1017,60 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// ── Speed & preset mode persistence ───────────────────────────────
+function loadSpeeds() {
+  var pan  = localStorage.getItem('ptz_pan_speed');
+  var tilt = localStorage.getItem('ptz_tilt_speed');
+  var zoom = localStorage.getItem('ptz_zoom_speed');
+  var pm   = localStorage.getItem('ptz_preset_mode');
+  if (pan)  { document.getElementById('panSpeed').value  = pan;  document.getElementById('panSpeedVal').textContent  = pan; }
+  if (tilt) { document.getElementById('tiltSpeed').value = tilt; document.getElementById('tiltSpeedVal').textContent = tilt; }
+  if (zoom) { document.getElementById('zoomSpeed').value = zoom; document.getElementById('zoomSpeedVal').textContent = zoom; }
+  if (pm)   setPresetMode(pm);
+}
+
+// ── Camera online ping ─────────────────────────────────────────────
+// Uses no-cors fetch to the camera's info endpoint. An opaque response
+// (fetch resolves) means the camera is reachable. A network error
+// (fetch rejects) means it isn't. Response body is never read.
+var camOnlineStatus = {};
+
+function pingCamera(i) {
+  var c = cameras[i];
+  if (!c || !c.ip) return;
+  fetch('http://' + c.ip + '/cgi-bin/param.cgi?get_device_conf', {
+    mode: 'no-cors',
+    credentials: 'include',
+    headers: { 'Authorization': 'Basic ' + btoa(c.user + ':' + c.pass) },
+    cache: 'no-store'
+  }).then(function() {
+    setDotState(i, 'online');
+  }).catch(function() {
+    setDotState(i, 'offline');
+  });
+}
+
+function setDotState(i, state) {
+  camOnlineStatus[i] = state;
+  var dot = document.getElementById('cam-dot-' + i);
+  if (!dot) return;
+  dot.className = 'cam-online-dot ' + state;
+}
+
+function pingAllCameras() {
+  cameras.forEach(function(c, i) { pingCamera(i); });
+}
+
 // ── Init ───────────────────────────────────────────────────────────
 loadTheme();
 loadCtrlMode();
+loadSpeeds();
 renderCamSelector();
 renderPresets();
 bindMoveButtons();
 window._bindJoyPuck();
+pingAllCameras();
+setInterval(pingAllCameras, 10000);
 </script>
 </body>
 </html>
