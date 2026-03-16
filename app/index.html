@@ -13,38 +13,40 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
 
+/* ── Themes ── */
 :root {
-  --bg: #0a0c10;
-  --panel: #111318;
-  --border: #1e2330;
-  --accent: #00e5ff;
-  --accent2: #ff4d6d;
-  --accent3: #69ff74;
-  --text: #c8d0e0;
-  --text-dim: #4a5270;
-  --btn-bg: #161b28;
-  --btn-active: #0a2a3a;
-  --grid-color: rgba(0,229,255,0.03);
-  --shadow-accent: rgba(0,229,255,0.15);
-  --mono: 'Share Tech Mono', monospace;
-  --sans: 'Barlow Condensed', sans-serif;
+  --bg:           #0a0c10;
+  --panel:        #111318;
+  --border:       #1e2330;
+  --accent:       #00e5ff;
+  --accent2:      #ff4d6d;
+  --accent3:      #69ff74;
+  --text:         #c8d0e0;
+  --dim:          #4a5270;
+  --btn:          #161b28;
+  --btn-act:      #0a2a3a;
+  --grid-col:     rgba(0,229,255,0.03);
+  --glow:         rgba(0,229,255,0.15);
+  --mono:         'Share Tech Mono', monospace;
+  --sans:         'Barlow Condensed', sans-serif;
 }
 :root.light {
-  --bg: #f0f2f7;
-  --panel: #ffffff;
-  --border: #d0d5e8;
-  --accent: #0077cc;
-  --accent2: #e0003a;
-  --accent3: #008a10;
-  --text: #1a1f30;
-  --text-dim: #8892aa;
-  --btn-bg: #e8ebf4;
-  --btn-active: #c8d8f0;
-  --grid-color: rgba(0,119,204,0.04);
-  --shadow-accent: rgba(0,119,204,0.15);
+  --bg:           #f0f2f7;
+  --panel:        #ffffff;
+  --border:       #d0d5e8;
+  --accent:       #0077cc;
+  --accent2:      #e0003a;
+  --accent3:      #008a10;
+  --text:         #1a1f30;
+  --dim:          #8892aa;
+  --btn:          #e8ebf4;
+  --btn-act:      #c8d8f0;
+  --grid-col:     rgba(0,119,204,0.04);
+  --glow:         rgba(0,119,204,0.15);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
   background: var(--bg);
@@ -54,329 +56,312 @@ body {
   overflow-x: hidden;
   user-select: none;
   -webkit-user-select: none;
-  transition: background 0.25s, color 0.25s;
+  transition: background .25s, color .25s;
 }
 body::before {
   content: '';
-  position: fixed; inset: 0;
-  background-image:
-    linear-gradient(var(--grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(var(--grid-col) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--grid-col) 1px, transparent 1px);
   background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
 }
-
 .app {
   position: relative; z-index: 1;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  max-width: 900px; margin: 0 auto; padding: 12px;
+  display: flex; flex-direction: column; gap: 12px;
 }
 
-/* Header */
+/* ── Header ── */
 header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 4px;
-  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 4px; border-bottom: 1px solid var(--border);
 }
 .logo { display: flex; align-items: center; gap: 8px; }
 .logo svg { height: 36px; width: auto; flex-shrink: 0; }
-.logo-wordmark { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-wm { display: flex; flex-direction: column; line-height: 1.1; }
 .logo-title { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; }
-.logo-sub   { font-family: var(--mono); font-size: 9px;  letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
-.header-btns { display: flex; gap: 6px; align-items: center; }
+.logo-sub   { font-family: var(--mono); font-size: 9px;  letter-spacing: 2px; color: var(--dim);    text-transform: uppercase; }
+.hdr-btns   { display: flex; gap: 6px; align-items: center; }
 .status-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: var(--accent3);
-  box-shadow: 0 0 8px var(--accent3);
+  background: var(--accent3); box-shadow: 0 0 8px var(--accent3);
   animation: pulse 2s ease-in-out infinite;
 }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .icon-btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-dim);
-  font-size: 15px;
-  width: 32px; height: 32px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s;
-  line-height: 1;
+  background: transparent; border: 1px solid var(--border); border-radius: 6px;
+  color: var(--dim); font-size: 15px; width: 32px; height: 32px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; line-height: 1;
 }
-.icon-btn:active { border-color: var(--accent); color: var(--accent); transform: scale(0.93); }
+.icon-btn:active { border-color: var(--accent); color: var(--accent); transform: scale(.93); }
 
-/* Camera selector */
+/* ── Camera selector ── */
 .cam-selector { display: flex; flex-wrap: wrap; gap: 6px; }
 .cam-btn {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 4px;
-  cursor: pointer;
-  transition: all 0.15s;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px; cursor: pointer; transition: all .15s;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  min-width: 70px; flex: 1 1 70px; max-width: 120px;
-  min-height: 60px;
+  min-width: 70px; flex: 1 1 70px; max-width: 120px; min-height: 60px;
   container-type: inline-size;
 }
-.cam-btn:active { transform: scale(0.96); }
-.cam-btn.active {
-  border-color: var(--accent);
-  background: rgba(0,229,255,0.07);
-  box-shadow: 0 0 12px var(--shadow-accent);
-}
-:root.light .cam-btn.active { background: rgba(0,119,204,0.07); }
+.cam-btn:active { transform: scale(.96); }
+.cam-btn.active { border-color: var(--accent); background: rgba(0,229,255,.07); box-shadow: 0 0 12px var(--glow); }
+:root.light .cam-btn.active { background: rgba(0,119,204,.07); }
 .cam-name {
-  font-family: var(--sans);
-  font-weight: 600;
+  font-family: var(--sans); font-weight: 600;
   font-size: clamp(13px, 7cqi, 32px);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  text-align: center;
-  word-break: break-word;
-  line-height: 1.15;
-  width: 100%;
+  letter-spacing: .5px; text-transform: uppercase;
+  color: var(--dim); text-align: center; word-break: break-word; line-height: 1.15; width: 100%;
 }
 .cam-btn.active .cam-name { color: var(--text); }
-.cam-ip { font-family: var(--mono); font-size: 8px; color: var(--text-dim); }
-.cam-btn.active .cam-ip { color: var(--accent); opacity: 0.6; }
-.cam-online-dot {
+.cam-ip { font-family: var(--mono); font-size: 8px; color: var(--dim); }
+.cam-btn.active .cam-ip { color: var(--accent); opacity: .6; }
+.cam-dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--border);
-  flex-shrink: 0;
-  transition: background 0.4s, box-shadow 0.4s;
+  background: var(--border); flex-shrink: 0; transition: background .4s, box-shadow .4s;
 }
-.cam-online-dot.online  { background: var(--accent3); box-shadow: 0 0 5px var(--accent3); }
-.cam-online-dot.offline { background: var(--accent2); box-shadow: none; }
-/* Controls row */
-.controls-row {
+.cam-dot.online  { background: var(--accent3); box-shadow: 0 0 5px var(--accent3); }
+.cam-dot.offline { background: var(--accent2); }
+
+/* ── Two-column layout (dpad | video/nothing) ── */
+/* Both the controls row and bottom row use the same fixed left column = dpad width */
+/* Dpad = 3*72 + 2*4 = 224px */
+.two-col {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 224px 1fr;
   gap: 10px;
   align-items: start;
 }
-.divider { width: 1px; background: var(--border); align-self: stretch; }
-
-/* Dpad wrap */
-.dpad-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.dpad-header { display: flex; align-items: center; gap: 8px; }
-.dpad-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
-
-/* Mode toggle pill */
-.ctrl-mode-toggle {
-  display: flex;
-  background: var(--btn-bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
+.col-divider {
+  display: none; /* visual divider between cols if needed */
 }
-.ctrl-mode-btn {
-  background: transparent; border: none;
-  color: var(--text-dim); font-family: var(--mono);
-  font-size: 9px; letter-spacing: 1px;
-  padding: 4px 7px; cursor: pointer;
-  text-transform: uppercase; transition: all 0.15s; white-space: nowrap;
-}
-.ctrl-mode-btn.active { background: var(--accent); color: var(--bg); }
 
-/* D-pad grids */
+/* ── Pan/Tilt section ── */
+.pt-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 224px; }
+.pt-header {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%;
+}
+.pt-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; }
+
+/* Mode toggle */
+.mode-pill {
+  display: flex; background: var(--btn); border: 1px solid var(--border);
+  border-radius: 6px; overflow: hidden;
+}
+.mode-pill-btn {
+  background: transparent; border: none; color: var(--dim);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  padding: 4px 7px; cursor: pointer; text-transform: uppercase; transition: all .15s; white-space: nowrap;
+}
+.mode-pill-btn.active { background: var(--accent); color: var(--bg); }
+
+/* D-pads */
 .dpad {
   display: grid;
-  grid-template-areas: ". up ." "left home right" ". down .";
+  grid-template-areas: ". U ." "L H R" ". D .";
   grid-template-columns: 72px 72px 72px;
   grid-template-rows: 72px 72px 72px;
   gap: 4px;
 }
-.dpad.dpad-8way {
-  grid-template-areas:
-    "leftup up rightup"
-    "left home right"
-    "leftdown down rightdown";
+.dpad.d8 {
+  grid-template-areas: "LU U RU" "L H R" "LD D RD";
 }
-.dpad-btn {
-  background: var(--btn-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 22px;
-  cursor: pointer;
+.dp {
+  background: var(--btn); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-size: 22px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: all 0.1s;
-  -webkit-touch-callout: none;
+  transition: all .1s; -webkit-touch-callout: none;
 }
-.dpad-btn:active, .dpad-btn.pressed {
-  background: var(--btn-active);
-  border-color: var(--accent);
-  color: var(--accent);
-  box-shadow: inset 0 0 10px rgba(0,229,255,0.1);
-  transform: scale(0.94);
+.dp:active, .dp.pressed {
+  background: var(--btn-act); border-color: var(--accent); color: var(--accent);
+  box-shadow: inset 0 0 10px rgba(0,229,255,.1); transform: scale(.94);
 }
-.dpad-btn[data-dir="up"]        { grid-area: up; }
-.dpad-btn[data-dir="down"]      { grid-area: down; }
-.dpad-btn[data-dir="left"]      { grid-area: left; }
-.dpad-btn[data-dir="right"]     { grid-area: right; }
-.dpad-btn[data-dir="home"]      { grid-area: home; font-size: 13px; font-family: var(--mono); color: var(--text-dim); }
-.dpad-btn[data-dir="home"]:active { color: var(--accent3); border-color: var(--accent3); }
-.dpad-btn[data-dir="leftup"]    { grid-area: leftup;    font-size: 17px; color: var(--accent); opacity: 0.75; }
-.dpad-btn[data-dir="rightup"]   { grid-area: rightup;   font-size: 17px; color: var(--accent); opacity: 0.75; }
-.dpad-btn[data-dir="leftdown"]  { grid-area: leftdown;  font-size: 17px; color: var(--accent); opacity: 0.75; }
-.dpad-btn[data-dir="rightdown"] { grid-area: rightdown; font-size: 17px; color: var(--accent); opacity: 0.75; }
-.dpad-btn.diag:active, .dpad-btn.diag.pressed { opacity: 1; }
+.dp[data-dir="up"]    { grid-area: U; }
+.dp[data-dir="down"]  { grid-area: D; }
+.dp[data-dir="left"]  { grid-area: L; }
+.dp[data-dir="right"] { grid-area: R; }
+.dp[data-dir="home"]  { grid-area: H; font-size: 13px; font-family: var(--mono); color: var(--dim); }
+.dp[data-dir="home"]:active { color: var(--accent3); border-color: var(--accent3); }
+.dp[data-dir="leftup"]    { grid-area: LU; font-size: 17px; color: var(--accent); opacity: .75; }
+.dp[data-dir="rightup"]   { grid-area: RU; font-size: 17px; color: var(--accent); opacity: .75; }
+.dp[data-dir="leftdown"]  { grid-area: LD; font-size: 17px; color: var(--accent); opacity: .75; }
+.dp[data-dir="rightdown"] { grid-area: RD; font-size: 17px; color: var(--accent); opacity: .75; }
+.dp.diag:active, .dp.diag.pressed { opacity: 1; }
 
-/* Joystick */
-.joy-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.joystick {
-  position: relative;
-  width: 220px; height: 220px;
-  flex-shrink: 0;
+/* Joystick -- fixed 220x220, all children absolute so container needs explicit size */
+.joy-outer { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.joy-ring-wrap {
+  position: relative; width: 220px; height: 220px; flex-shrink: 0;
 }
-.joy-ring {
-  position: absolute; inset: 0;
-  border-radius: 50%;
-  background: var(--btn-bg);
-  border: 1px solid var(--border);
+.joy-bg {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: var(--btn); border: 1px solid var(--border);
 }
-.joy-ch::before, .joy-ch::after {
-  content: ''; position: absolute; background: var(--border);
+.joy-ch {
+  position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
 }
-.joy-ch::before { left: 50%; top: 10%; width: 1px; height: 80%; transform: translateX(-50%); }
-.joy-ch::after  { top: 50%; left: 10%; height: 1px; width: 80%; transform: translateY(-50%); }
+.joy-ch::before {
+  content: ''; position: absolute;
+  left: 50%; top: 10%; width: 1px; height: 80%;
+  background: var(--border); transform: translateX(-50%);
+}
+.joy-ch::after {
+  content: ''; position: absolute;
+  top: 50%; left: 10%; height: 1px; width: 80%;
+  background: var(--border); transform: translateY(-50%);
+}
 .joy-dead {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%,-50%);
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1px dashed var(--border);
-  pointer-events: none;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px dashed var(--border); pointer-events: none;
 }
 .joy-lbl {
-  position: absolute;
-  font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--text-dim);
-  pointer-events: none;
+  position: absolute; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 1px; color: var(--dim); pointer-events: none;
 }
-.joy-lbl.t { top: 8px;    left: 50%; transform: translateX(-50%); }
-.joy-lbl.b { bottom: 8px; left: 50%; transform: translateX(-50%); }
-.joy-lbl.l { left: 8px;   top: 50%;  transform: translateY(-50%); }
-.joy-lbl.r { right: 8px;  top: 50%;  transform: translateY(-50%); }
+.joy-lbl.jt { top: 8px;    left: 50%; transform: translateX(-50%); }
+.joy-lbl.jb { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.joy-lbl.jl { left: 8px;   top: 50%;  transform: translateY(-50%); }
+.joy-lbl.jr { right: 8px;  top: 50%;  transform: translateY(-50%); }
 .joy-puck {
-  position: absolute;
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  background: var(--btn-bg);
-  border: 2px solid var(--accent);
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  cursor: grab;
-  touch-action: none;
+  position: absolute; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--btn); border: 2px solid var(--accent);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  cursor: grab; touch-action: none;
   display: flex; align-items: center; justify-content: center;
-  transition: background 0.1s;
+  transition: background .1s;
 }
-.joy-puck.active { cursor: grabbing; background: var(--btn-active); }
+.joy-puck.active { cursor: grabbing; background: var(--btn-act); }
 .joy-dot {
   width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent); pointer-events: none;
-  transition: transform 0.1s;
+  background: var(--accent); pointer-events: none; transition: transform .1s;
 }
 .joy-puck.active .joy-dot { transform: scale(1.3); }
 .joy-readout {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--text-dim); text-align: center; min-height: 14px; letter-spacing: 1px;
+  font-family: var(--mono); font-size: 10px; color: var(--dim);
+  text-align: center; min-height: 14px; letter-spacing: 1px;
 }
 .joy-val { color: var(--accent); }
 
-/* Zoom/Focus strips */
-.strip-col { display: flex; flex-direction: column; gap: 8px; }
-.strip-label {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
-  color: var(--text-dim); text-transform: uppercase; text-align: center;
+/* ── Video panel ── */
+.video-panel {
+  position: relative; background: #0a0c10;
+  border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; width: 100%; aspect-ratio: 16/9;
+  display: flex; align-items: center; justify-content: center;
 }
-.btn-strip { display: flex; flex-direction: column; gap: 6px; }
-.strip-btn {
-  background: var(--btn-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-family: var(--sans); font-weight: 600; font-size: 14px; letter-spacing: 1px;
-  padding: 14px 10px;
-  cursor: pointer; text-align: center; transition: all 0.1s;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  -webkit-touch-callout: none;
+.video-feed { width: 100%; height: 100%; object-fit: contain; display: block; }
+.video-ph {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  background: #0a0c10;
 }
-.strip-btn:active, .strip-btn.pressed {
-  background: var(--btn-active); border-color: var(--accent); color: var(--accent); transform: scale(0.95);
+.video-ph-name {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 2px;
+  color: var(--dim); text-transform: uppercase; text-align: center; padding: 0 8px;
 }
-.strip-btn.zoom  { border-color: rgba(255,77,109,0.3); }
-.strip-btn.zoom:active,  .strip-btn.zoom.pressed  { border-color: var(--accent2); color: var(--accent2); background: rgba(255,77,109,0.08); }
-.strip-btn.focus { border-color: rgba(105,255,116,0.2); }
-.strip-btn.focus:active, .strip-btn.focus.pressed { border-color: var(--accent3); color: var(--accent3); background: rgba(105,255,116,0.06); }
+.video-ph-sub {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  color: var(--border); text-transform: uppercase;
+}
 
-/* Speed panel */
+/* ── Zoom / Focus ── */
+.zf-wrap {
+  /* same width as dpad column */
+  width: 224px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.zf-group { display: flex; gap: 6px; flex: 1; }
+.zf-col { display: flex; flex-direction: column; gap: 4px; }
+.zf-col.zoom-col  { flex: 2; }
+.zf-col.focus-col { flex: 1; }
+.zf-col-btns { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.zf-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  color: var(--dim); text-transform: uppercase; text-align: center; margin-bottom: 2px;
+}
+.zf-btn {
+  background: var(--btn); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-family: var(--sans); font-weight: 600;
+  font-size: 14px; letter-spacing: 1px;
+  cursor: pointer; text-align: center; transition: all .1s;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  -webkit-touch-callout: none;
+  flex: 1; min-height: 52px; padding: 0 6px;
+}
+.zf-btn:active, .zf-btn.pressed {
+  background: var(--btn-act); border-color: var(--accent); color: var(--accent); transform: scale(.95);
+}
+.zf-btn.zoom  { border-color: rgba(255,77,109,.3); }
+.zf-btn.zoom:active,  .zf-btn.zoom.pressed  { border-color: var(--accent2); color: var(--accent2); background: rgba(255,77,109,.08); }
+.zf-btn.focus { border-color: rgba(105,255,116,.2); }
+.zf-btn.focus:active, .zf-btn.focus.pressed { border-color: var(--accent3); color: var(--accent3); background: rgba(105,255,116,.06); }
+
+/* ── Speed panel ── */
 .speed-panel {
   background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
   padding: 10px 12px; display: flex; flex-direction: column; gap: 8px;
+  align-self: start;
 }
-.speed-title { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
-.speed-row { display: flex; align-items: center; gap: 10px; }
-.speed-row label { font-family: var(--mono); font-size: 10px; color: var(--text-dim); width: 28px; text-transform: uppercase; }
-.speed-val  { font-family: var(--mono); font-size: 14px; color: var(--accent); width: 22px; text-align: right; }
-input[type=range] { -webkit-appearance: none; flex: 1; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
+.speed-title { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; }
+.speed-row { display: flex; align-items: center; gap: 8px; }
+.speed-row label { font-family: var(--mono); font-size: 10px; color: var(--dim); width: 28px; text-transform: uppercase; }
+.speed-val   { font-family: var(--mono); font-size: 14px; color: var(--accent); width: 22px; text-align: right; }
+input[type=range] {
+  -webkit-appearance: none; flex: 1; height: 4px;
+  border-radius: 2px; background: var(--border); outline: none; min-width: 0;
+}
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
-  background: var(--accent); box-shadow: 0 0 8px var(--shadow-accent); cursor: pointer;
+  background: var(--accent); box-shadow: 0 0 8px var(--glow); cursor: pointer;
 }
 
-/* Presets */
-.presets-section {
+/* ── Presets ── */
+.presets-wrap {
   background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
   padding: 12px; display: flex; flex-direction: column; gap: 10px;
 }
-.presets-header { display: flex; align-items: center; justify-content: space-between; }
-.presets-title { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
-.preset-mode-toggle { display: flex; gap: 4px; }
-.mode-btn {
+.presets-hdr { display: flex; align-items: center; justify-content: space-between; }
+.presets-title { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; }
+.preset-mode { display: flex; gap: 4px; }
+.pm-btn {
   background: transparent; border: 1px solid var(--border); border-radius: 4px;
-  color: var(--text-dim); font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
-  padding: 4px 8px; cursor: pointer; text-transform: uppercase; transition: all 0.15s;
+  color: var(--dim); font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  padding: 4px 8px; cursor: pointer; text-transform: uppercase; transition: all .15s;
 }
-.mode-btn.active { border-color: var(--accent3); color: var(--accent3); background: rgba(105,255,116,0.06); }
+.pm-btn.active { border-color: var(--accent3); color: var(--accent3); background: rgba(105,255,116,.06); }
 .presets-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 6px; }
 .preset-btn {
-  background: var(--btn-bg); border: 1px solid var(--border); border-radius: 6px;
-  color: var(--text-dim); font-family: var(--mono); font-size: 14px;
-  padding: 10px 4px; cursor: pointer; text-align: center; transition: all 0.15s;
+  background: var(--btn); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--dim); font-family: var(--mono); font-size: 14px;
+  padding: 10px 4px; cursor: pointer; text-align: center; transition: all .15s;
 }
-.preset-btn:active { transform: scale(0.93); background: var(--btn-active); border-color: var(--accent3); color: var(--accent3); }
-.preset-btn.set-mode:active { border-color: var(--accent2); color: var(--accent2); background: rgba(255,77,109,0.08); }
+.preset-btn:active { transform: scale(.93); background: var(--btn-act); border-color: var(--accent3); color: var(--accent3); }
+.preset-btn.set-mode:active { border-color: var(--accent2); color: var(--accent2); background: rgba(255,77,109,.08); }
 
-/* Toast */
+/* ── Toast ── */
 #toast {
   position: fixed; bottom: 30px; left: 50%;
   transform: translateX(-50%) translateY(20px);
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px 18px;
-  font-family: var(--mono); font-size: 11px; color: var(--text); letter-spacing: 1px;
-  opacity: 0; transition: opacity 0.2s, transform 0.2s;
-  pointer-events: none; z-index: 100; white-space: nowrap;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 18px; font-family: var(--mono); font-size: 11px;
+  color: var(--text); letter-spacing: 1px; opacity: 0;
+  transition: opacity .2s, transform .2s; pointer-events: none; z-index: 100; white-space: nowrap;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 #toast.ok   { border-color: var(--accent3); color: var(--accent3); }
 #toast.err  { border-color: var(--accent2); color: var(--accent2); }
 
-/* Settings modal */
-.modal-overlay {
+/* ── Settings modal ── */
+.modal-bg {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7); z-index: 200;
+  background: rgba(0,0,0,.7); z-index: 200;
   align-items: center; justify-content: center; padding: 20px;
 }
-.modal-overlay.open { display: flex; }
+.modal-bg.open { display: flex; }
 .modal {
   background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
   padding: 20px; width: 100%; max-width: 540px;
@@ -384,107 +369,131 @@ input[type=range]::-webkit-slider-thumb {
   max-height: 85vh; overflow-y: auto;
 }
 .modal-title { font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
-.cfg-headers {
+.cfg-hdrs {
   display: grid; grid-template-columns: 22px 1fr 1fr 1fr 28px; gap: 6px;
 }
-.cfg-headers span { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--text-dim); text-transform: uppercase; }
-.cam-config-row {
+.cfg-hdrs span { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--dim); text-transform: uppercase; }
+.cfg-row {
   display: grid; grid-template-columns: 22px 1fr 1fr 1fr 28px; gap: 6px; align-items: center;
 }
-.row-num { font-family: var(--mono); font-size: 13px; color: var(--text-dim); text-align: center; }
-.cfg-input {
-  background: var(--btn-bg); border: 1px solid var(--border); border-radius: 6px;
-  color: var(--text); font-family: var(--mono); font-size: 11px; padding: 8px; outline: none; width: 100%;
-  transition: border-color 0.15s;
+.cfg-num { font-family: var(--mono); font-size: 13px; color: var(--dim); text-align: center; }
+.cfg-in {
+  background: var(--btn); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); font-family: var(--mono); font-size: 11px;
+  padding: 8px; outline: none; width: 100%; transition: border-color .15s;
 }
-.cfg-input:focus { border-color: var(--accent); }
-.cfg-input::placeholder { color: var(--text-dim); }
+.cfg-in:focus { border-color: var(--accent); }
+.cfg-in::placeholder { color: var(--dim); }
 .del-btn {
   background: transparent; border: 1px solid var(--border); border-radius: 5px;
-  color: var(--text-dim); font-size: 13px; width: 28px; height: 28px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 0; flex-shrink: 0;
+  color: var(--dim); font-size: 13px; width: 28px; height: 28px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; padding: 0; flex-shrink: 0;
 }
 .del-btn:active { border-color: var(--accent2); color: var(--accent2); }
 .cam-count-row {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 0 4px; border-top: 1px solid var(--border);
 }
-.cam-count-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; flex: 1; }
+.cam-count-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; flex: 1; }
 .count-btn {
-  background: var(--btn-bg); border: 1px solid var(--border); border-radius: 6px;
+  background: var(--btn); border: 1px solid var(--border); border-radius: 6px;
   color: var(--text); font-family: var(--mono); font-size: 18px;
-  width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  width: 34px; height: 34px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all .15s;
 }
-.count-btn:active { border-color: var(--accent); color: var(--accent); transform: scale(0.93); }
-.count-btn:disabled { opacity: 0.3; pointer-events: none; }
-.count-display { font-family: var(--mono); font-size: 20px; color: var(--accent); min-width: 28px; text-align: center; }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-end; padding-top: 8px; border-top: 1px solid var(--border); }
+.count-btn:active  { border-color: var(--accent); color: var(--accent); transform: scale(.93); }
+.count-btn:disabled { opacity: .3; pointer-events: none; }
+.count-num { font-family: var(--mono); font-size: 20px; color: var(--accent); min-width: 28px; text-align: center; }
+/* Video toggle row */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0 4px; border-top: 1px solid var(--border);
+}
+.toggle-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; }
+.tog {
+  position: relative; width: 38px; height: 22px; flex-shrink: 0;
+}
+.tog input { opacity: 0; width: 0; height: 0; }
+.tog-track {
+  position: absolute; inset: 0; background: var(--border); border-radius: 11px;
+  cursor: pointer; transition: background .2s;
+}
+.tog-track::after {
+  content: ''; position: absolute; left: 3px; top: 3px;
+  width: 16px; height: 16px; border-radius: 50%; background: var(--dim);
+  transition: transform .2s, background .2s;
+}
+.tog input:checked + .tog-track { background: var(--accent); }
+.tog input:checked + .tog-track::after { transform: translateX(16px); background: var(--bg); }
+/* Modal actions */
+.modal-actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+  padding-top: 8px; border-top: 1px solid var(--border);
+}
 .modal-btn {
-  background: var(--btn-bg); border: 1px solid var(--border); border-radius: 6px;
-  color: var(--text); font-family: var(--sans); font-weight: 600; font-size: 13px; letter-spacing: 1px;
-  padding: 10px 18px; cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+  background: var(--btn); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text); font-family: var(--sans); font-weight: 600; font-size: 13px;
+  letter-spacing: 1px; padding: 10px 18px; cursor: pointer; transition: all .15s; text-transform: uppercase;
 }
-.modal-btn.primary { border-color: var(--accent); color: var(--accent); background: rgba(0,100,180,0.06); }
-.modal-btn:active { transform: scale(0.97); }
+.modal-btn.primary { border-color: var(--accent); color: var(--accent); background: rgba(0,100,180,.06); }
+.modal-btn:active { transform: scale(.97); }
 
-/* PWA install banner */
+/* ── PWA install banner ── */
 #install-banner {
   display: none; position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%); z-index: 300;
   background: var(--panel); border: 1px solid var(--accent); border-radius: 12px;
   padding: 12px 16px 16px; max-width: 320px; width: calc(100% - 32px);
-  animation: bannerIn 0.3s ease;
 }
 #install-banner.visible { display: block; }
-@keyframes bannerIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
 .banner-row { display: flex; align-items: flex-start; gap: 10px; }
 .banner-icon { font-size: 28px; flex-shrink: 0; line-height: 1; }
 .banner-title { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
-.banner-body { font-family: var(--sans); font-size: 13px; font-weight: 400; color: var(--text); line-height: 1.4; }
-.banner-body strong { color: var(--accent); font-weight: 600; }
-.banner-arrow { text-align: center; font-family: var(--sans); font-size: 12px; color: var(--text-dim); margin-top: 10px; letter-spacing: 1px; }
+.banner-body { font-family: var(--sans); font-size: 13px; color: var(--text); line-height: 1.4; }
+.banner-body strong { color: var(--accent); }
+.banner-arrow { text-align: center; font-family: var(--sans); font-size: 12px; color: var(--dim); margin-top: 10px; }
 .banner-arrow strong { color: var(--text); }
-.banner-dismiss {
+.banner-x {
   position: absolute; top: 8px; right: 10px;
-  background: transparent; border: none; color: var(--text-dim); font-size: 16px; cursor: pointer; padding: 2px 4px; line-height: 1;
+  background: transparent; border: none; color: var(--dim); font-size: 16px; cursor: pointer; padding: 2px 4px;
 }
-.banner-dismiss:active { color: var(--text); }
 
+/* ── Responsive ── */
 @media (max-width: 520px) {
-  .dpad { grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px 64px; }
-  .dpad.dpad-8way { grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px 64px; }
-  .cfg-headers { grid-template-columns: 20px 1fr 1fr 28px; }
-  .cfg-headers .creds-hdr { display: none; }
-  .cam-config-row { grid-template-columns: 20px 1fr 1fr 28px; }
-  .cam-config-row .creds-input { display: none; }
+  .dpad  { grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px 64px; }
+  .dpad.d8 { grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px 64px; }
+  .two-col { grid-template-columns: 216px 1fr; }
+  .pt-wrap, .zf-wrap { width: 216px; }
+  .cfg-hdrs { grid-template-columns: 20px 1fr 1fr 28px; }
+  .cfg-hdrs .ch { display: none; }
+  .cfg-row  { grid-template-columns: 20px 1fr 1fr 28px; }
+  .cfg-row  .ci { display: none; }
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- Header -->
+  <!-- ── Header ── -->
   <header>
     <div class="logo">
       <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="40" cy="40" rx="33" ry="33" fill="#c0622a"/>
         <ellipse cx="40" cy="37" rx="32" ry="29" fill="#e8845a"/>
-        <ellipse cx="36" cy="28" rx="18" ry="10" fill="#f0a070" opacity="0.55"/>
+        <ellipse cx="36" cy="28" rx="18" ry="10" fill="#f0a070" opacity=".55"/>
         <ellipse cx="40" cy="40" rx="13" ry="13" fill="#0a0c10"/>
         <g transform="translate(40,40)">
-          <g transform="rotate(0)">  <ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity="0.9"/></g>
-          <g transform="rotate(60)"> <ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity="0.9"/></g>
-          <g transform="rotate(120)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity="0.9"/></g>
-          <g transform="rotate(180)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity="0.9"/></g>
-          <g transform="rotate(240)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity="0.9"/></g>
-          <g transform="rotate(300)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity="0.9"/></g>
+          <g transform="rotate(0)">  <ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity=".9"/></g>
+          <g transform="rotate(60)"> <ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity=".9"/></g>
+          <g transform="rotate(120)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity=".9"/></g>
+          <g transform="rotate(180)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity=".9"/></g>
+          <g transform="rotate(240)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity=".9"/></g>
+          <g transform="rotate(300)"><ellipse cx="0" cy="-8" rx="3.5" ry="6" fill="#1a2235" opacity=".9"/></g>
           <circle cx="0" cy="0" r="5.5" fill="#0a0e1a"/>
           <circle cx="0" cy="0" r="4"   fill="#111827"/>
-          <circle cx="-1.5" cy="-1.5" r="1.2" fill="#00e5ff" opacity="0.5"/>
-          <circle cx="-1.5" cy="-1.5" r="0.5" fill="#ffffff" opacity="0.7"/>
+          <circle cx="-1.5" cy="-1.5" r="1.2" fill="#00e5ff" opacity=".5"/>
+          <circle cx="-1.5" cy="-1.5" r="0.5" fill="#fff"    opacity=".7"/>
         </g>
         <rect x="22" y="20" width="6"  height="2.5" rx="1.25" fill="#4ecdc4" transform="rotate(-25,25,21)"/>
         <rect x="47" y="14" width="5"  height="2"   rx="1"    fill="#ff6b9d" transform="rotate(15,49,15)"/>
@@ -500,121 +509,132 @@ input[type=range]::-webkit-slider-thumb {
         <path d="M40,5 A38,38 0 0,1 67,19" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" marker-end="url(#la)"/>
         <path d="M40,75 A38,38 0 0,1 13,61" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" marker-end="url(#la)"/>
       </svg>
-      <div class="logo-wordmark">
+      <div class="logo-wm">
         <span class="logo-title">Simple PTZ</span>
         <span class="logo-sub">Camera Control</span>
       </div>
     </div>
-    <div class="header-btns">
+    <div class="hdr-btns">
       <div class="status-dot"></div>
-      <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle light/dark">&#9728;</button>
-      <button class="icon-btn" onclick="openSettings()" title="Configure Cameras">&#9881;</button>
+      <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+      <button class="icon-btn" onclick="openSettings()" title="Settings">&#9881;</button>
     </div>
   </header>
 
-  <!-- Camera selector -->
+  <!-- ── Camera selector ── -->
   <div class="cam-selector" id="camSelector"></div>
 
-  <!-- Main controls -->
-  <div class="controls-row">
-
-    <!-- Left: Pan/Tilt -->
-    <div class="dpad-wrap">
-      <div class="dpad-header">
-        <div class="dpad-label">Pan / Tilt</div>
-        <div class="ctrl-mode-toggle">
-          <button class="ctrl-mode-btn" id="ctrlBtn4"   onclick="setCtrlMode('dpad4')">4-WAY</button>
-          <button class="ctrl-mode-btn" id="ctrlBtn8"   onclick="setCtrlMode('dpad8')">8-WAY</button>
-          <button class="ctrl-mode-btn" id="ctrlBtnJoy" onclick="setCtrlMode('joy')">JOY</button>
+  <!-- ── Row 1: Pan/Tilt | Video ── -->
+  <div class="two-col" id="row1">
+    <!-- Pan/Tilt -->
+    <div class="pt-wrap">
+      <div class="pt-header">
+        <div class="pt-label">Pan / Tilt</div>
+        <div class="mode-pill">
+          <button class="mode-pill-btn" id="btn4"   onclick="setCtrl('dpad4')">4-WAY</button>
+          <button class="mode-pill-btn" id="btn8"   onclick="setCtrl('dpad8')">8-WAY</button>
+          <button class="mode-pill-btn" id="btnJoy" onclick="setCtrl('joy')">JOY</button>
         </div>
       </div>
-
-      <!-- 4-way dpad -->
-      <div class="dpad" id="ctrl-dpad4">
-        <button class="dpad-btn" data-dir="up"    data-cmd-start="up"    data-cmd-stop="ptzstop">&#9650;</button>
-        <button class="dpad-btn" data-dir="left"  data-cmd-start="left"  data-cmd-stop="ptzstop">&#9664;</button>
-        <button class="dpad-btn" data-dir="home"  onclick="sendHome()">HOME</button>
-        <button class="dpad-btn" data-dir="right" data-cmd-start="right" data-cmd-stop="ptzstop">&#9654;</button>
-        <button class="dpad-btn" data-dir="down"  data-cmd-start="down"  data-cmd-stop="ptzstop">&#9660;</button>
+      <!-- 4-way -->
+      <div class="dpad" id="ctrl4">
+        <button class="dp" data-dir="up"    data-cs="up"    data-cx="ptzstop">&#9650;</button>
+        <button class="dp" data-dir="left"  data-cs="left"  data-cx="ptzstop">&#9664;</button>
+        <button class="dp" data-dir="home"  onclick="sendHome()">HOME</button>
+        <button class="dp" data-dir="right" data-cs="right" data-cx="ptzstop">&#9654;</button>
+        <button class="dp" data-dir="down"  data-cs="down"  data-cx="ptzstop">&#9660;</button>
       </div>
-
-      <!-- 8-way dpad -->
-      <div class="dpad dpad-8way" id="ctrl-dpad8" style="display:none">
-        <button class="dpad-btn diag" data-dir="leftup"    data-cmd-start="leftup"    data-cmd-stop="ptzstop">&#8598;</button>
-        <button class="dpad-btn"      data-dir="up"        data-cmd-start="up"        data-cmd-stop="ptzstop">&#9650;</button>
-        <button class="dpad-btn diag" data-dir="rightup"   data-cmd-start="rightup"   data-cmd-stop="ptzstop">&#8599;</button>
-        <button class="dpad-btn"      data-dir="left"      data-cmd-start="left"      data-cmd-stop="ptzstop">&#9664;</button>
-        <button class="dpad-btn"      data-dir="home"      onclick="sendHome()">HOME</button>
-        <button class="dpad-btn"      data-dir="right"     data-cmd-start="right"     data-cmd-stop="ptzstop">&#9654;</button>
-        <button class="dpad-btn diag" data-dir="leftdown"  data-cmd-start="leftdown"  data-cmd-stop="ptzstop">&#8601;</button>
-        <button class="dpad-btn"      data-dir="down"      data-cmd-start="down"      data-cmd-stop="ptzstop">&#9660;</button>
-        <button class="dpad-btn diag" data-dir="rightdown" data-cmd-start="rightdown" data-cmd-stop="ptzstop">&#8600;</button>
+      <!-- 8-way -->
+      <div class="dpad d8" id="ctrl8" style="display:none">
+        <button class="dp diag" data-dir="leftup"    data-cs="leftup"    data-cx="ptzstop">&#8598;</button>
+        <button class="dp"      data-dir="up"        data-cs="up"        data-cx="ptzstop">&#9650;</button>
+        <button class="dp diag" data-dir="rightup"   data-cs="rightup"   data-cx="ptzstop">&#8599;</button>
+        <button class="dp"      data-dir="left"      data-cs="left"      data-cx="ptzstop">&#9664;</button>
+        <button class="dp"      data-dir="home"      onclick="sendHome()">HOME</button>
+        <button class="dp"      data-dir="right"     data-cs="right"     data-cx="ptzstop">&#9654;</button>
+        <button class="dp diag" data-dir="leftdown"  data-cs="leftdown"  data-cx="ptzstop">&#8601;</button>
+        <button class="dp"      data-dir="down"      data-cs="down"      data-cx="ptzstop">&#9660;</button>
+        <button class="dp diag" data-dir="rightdown" data-cs="rightdown" data-cx="ptzstop">&#8600;</button>
       </div>
-
       <!-- Joystick -->
-      <div class="joy-wrap" id="ctrl-joy" style="display:none">
-        <div class="joystick" id="joystick">
-          <div class="joy-ring"></div>
+      <div class="joy-outer" id="ctrlJoy" style="display:none">
+        <div class="joy-ring-wrap" id="joyWrap">
+          <div class="joy-bg"></div>
           <div class="joy-ch"></div>
           <div class="joy-dead"></div>
-          <div class="joy-lbl t">T</div>
-          <div class="joy-lbl b">D</div>
-          <div class="joy-lbl l">L</div>
-          <div class="joy-lbl r">R</div>
+          <div class="joy-lbl jt">T</div>
+          <div class="joy-lbl jb">D</div>
+          <div class="joy-lbl jl">L</div>
+          <div class="joy-lbl jr">R</div>
           <div class="joy-puck" id="joyPuck"><div class="joy-dot"></div></div>
         </div>
         <div class="joy-readout" id="joyReadout">drag to move</div>
       </div>
     </div>
 
-    <!-- Divider -->
-    <div class="divider"></div>
-
-    <!-- Right: Zoom + Focus -->
-    <div class="strip-col">
-      <div class="strip-label">Zoom</div>
-      <div class="btn-strip">
-        <button class="strip-btn zoom"  data-cmd-start="zoomin"   data-cmd-stop="zoomstop"  data-type="zoom">&#128269; TELE</button>
-        <button class="strip-btn zoom"  data-cmd-start="zoomout"  data-cmd-stop="zoomstop"  data-type="zoom">&#128301; WIDE</button>
-      </div>
-      <div class="strip-label" style="margin-top:4px">Focus</div>
-      <div class="btn-strip">
-        <button class="strip-btn focus" data-cmd-start="focusin"  data-cmd-stop="focusstop" data-type="focus">NEAR</button>
-        <button class="strip-btn focus" data-cmd-start="focusout" data-cmd-stop="focusstop" data-type="focus">FAR</button>
+    <!-- Video panel (right col) -->
+    <div id="videoPanel" class="video-panel" style="display:none">
+      <img id="videoFeed" class="video-feed" alt="">
+      <div class="video-ph" id="videoPH">
+        <div class="video-ph-name" id="videoPHName">CAM 1</div>
+        <div class="video-ph-sub">no signal</div>
       </div>
     </div>
   </div>
 
-  <!-- Speed -->
-  <div class="speed-panel">
-    <div class="speed-title">Speed</div>
-    <div class="speed-row">
-      <label>PAN</label>
-      <input type="range" id="panSpeed" min="1" max="24" value="8"
-        oninput="document.getElementById('panSpeedVal').textContent=this.value; localStorage.setItem('ptz_pan_speed',this.value)">
-      <div class="speed-val" id="panSpeedVal">8</div>
+  <!-- ── Row 2: Zoom+Focus | Speed ── -->
+  <div class="two-col">
+    <!-- Zoom + Focus -->
+    <div class="zf-wrap">
+      <div class="zf-group">
+        <div class="zf-col zoom-col">
+          <div class="zf-label">Zoom</div>
+          <div class="zf-col-btns">
+            <button class="zf-btn zoom"  data-cs="zoomin"   data-cx="zoomstop"  data-type="zoom">&#128269; TELE</button>
+            <button class="zf-btn zoom"  data-cs="zoomout"  data-cx="zoomstop"  data-type="zoom">&#128301; WIDE</button>
+          </div>
+        </div>
+        <div class="zf-col focus-col">
+          <div class="zf-label">Focus</div>
+          <div class="zf-col-btns">
+            <button class="zf-btn focus" data-cs="focusin"  data-cx="focusstop" data-type="focus">NEAR</button>
+            <button class="zf-btn focus" data-cs="focusout" data-cx="focusstop" data-type="focus">FAR</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="speed-row">
-      <label>TILT</label>
-      <input type="range" id="tiltSpeed" min="1" max="20" value="6"
-        oninput="document.getElementById('tiltSpeedVal').textContent=this.value; localStorage.setItem('ptz_tilt_speed',this.value)">
-      <div class="speed-val" id="tiltSpeedVal">6</div>
-    </div>
-    <div class="speed-row">
-      <label>ZOOM</label>
-      <input type="range" id="zoomSpeed" min="1" max="7" value="3"
-        oninput="document.getElementById('zoomSpeedVal').textContent=this.value; localStorage.setItem('ptz_zoom_speed',this.value)">
-      <div class="speed-val" id="zoomSpeedVal">3</div>
+
+    <!-- Speed -->
+    <div class="speed-panel">
+      <div class="speed-title">Speed</div>
+      <div class="speed-row">
+        <label>PAN</label>
+        <input type="range" id="panSpeed" min="1" max="24" value="8"
+          oninput="document.getElementById('panVal').textContent=this.value;localStorage.setItem('ptz_pan',this.value)">
+        <div class="speed-val" id="panVal">8</div>
+      </div>
+      <div class="speed-row">
+        <label>TILT</label>
+        <input type="range" id="tiltSpeed" min="1" max="20" value="6"
+          oninput="document.getElementById('tiltVal').textContent=this.value;localStorage.setItem('ptz_tilt',this.value)">
+        <div class="speed-val" id="tiltVal">6</div>
+      </div>
+      <div class="speed-row">
+        <label>ZOOM</label>
+        <input type="range" id="zoomSpeed" min="1" max="7" value="3"
+          oninput="document.getElementById('zoomVal').textContent=this.value;localStorage.setItem('ptz_zoom',this.value)">
+        <div class="speed-val" id="zoomVal">3</div>
+      </div>
     </div>
   </div>
 
-  <!-- Presets -->
-  <div class="presets-section">
-    <div class="presets-header">
+  <!-- ── Presets ── -->
+  <div class="presets-wrap">
+    <div class="presets-hdr">
       <div class="presets-title">Presets</div>
-      <div class="preset-mode-toggle">
-        <button class="mode-btn active" id="modeBtnCall" onclick="setPresetMode('call')">CALL</button>
-        <button class="mode-btn"        id="modeBtnSet"  onclick="setPresetMode('set')">SET</button>
+      <div class="preset-mode">
+        <button class="pm-btn active" id="pmCall" onclick="setPresetMode('call')">CALL</button>
+        <button class="pm-btn"        id="pmSet"  onclick="setPresetMode('set')">SET</button>
       </div>
     </div>
     <div class="presets-grid" id="presetsGrid"></div>
@@ -626,19 +646,26 @@ input[type=range]::-webkit-slider-thumb {
 <div id="toast"></div>
 
 <!-- Settings modal -->
-<div class="modal-overlay" id="settingsModal">
+<div class="modal-bg" id="settingsModal">
   <div class="modal">
     <div class="modal-title">Camera Configuration</div>
-    <div class="cfg-headers">
+    <div class="cfg-hdrs">
       <span></span><span>Name</span><span>IP Address</span>
-      <span class="creds-hdr">User:Pass</span><span></span>
+      <span class="ch">User:Pass</span><span></span>
     </div>
-    <div id="camConfigRows"></div>
+    <div id="cfgRows"></div>
     <div class="cam-count-row">
-      <div class="cam-count-label">Cameras</div>
+      <div class="cam-count-lbl">Cameras</div>
       <button class="count-btn" id="removeCamBtn" onclick="removeCam()">&#8722;</button>
-      <div class="count-display" id="camCountDisplay">4</div>
+      <div class="count-num" id="camCountNum">4</div>
       <button class="count-btn" onclick="addCam()">+</button>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-lbl">Show live video</div>
+      <label class="tog">
+        <input type="checkbox" id="videoToggle" onchange="setVideoEnabled(this.checked)">
+        <span class="tog-track"></span>
+      </label>
     </div>
     <div class="modal-actions">
       <button class="modal-btn" onclick="closeSettings()">Cancel</button>
@@ -649,12 +676,12 @@ input[type=range]::-webkit-slider-thumb {
 
 <!-- PWA install banner -->
 <div id="install-banner">
-  <button class="banner-dismiss" onclick="dismissBanner()" title="Dismiss">&#10005;</button>
+  <button class="banner-x" onclick="dismissBanner()">&#10005;</button>
   <div class="banner-row">
     <div class="banner-icon">&#127849;</div>
     <div>
       <div class="banner-title">Install as App</div>
-      <div class="banner-body">Add <strong>Simple PTZ</strong> to your Home Screen to keep it running offline and prevent Safari from unloading it.</div>
+      <div class="banner-body">Add <strong>Simple PTZ</strong> to your Home Screen to keep it running offline.</div>
     </div>
   </div>
   <div class="banner-arrow">Tap &#9633; Share &rarr; <strong>Add to Home Screen</strong></div>
@@ -666,411 +693,366 @@ function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── Default / stored state ─────────────────────────────────────────
-const DEFAULT_CAMS = [
-  { name:'CAM 1', ip:'192.168.100.51', user:'admin', pass:'admin' },
-  { name:'CAM 2', ip:'192.168.100.52', user:'admin', pass:'admin' },
-  { name:'CAM 3', ip:'192.168.100.53', user:'admin', pass:'admin' },
-  { name:'CAM 4', ip:'192.168.100.54', user:'admin', pass:'admin' },
+// ── Data ───────────────────────────────────────────────────────────
+var DEFAULT_CAMS = [
+  {name:'CAM 1',ip:'192.168.100.51',user:'admin',pass:'admin'},
+  {name:'CAM 2',ip:'192.168.100.52',user:'admin',pass:'admin'},
+  {name:'CAM 3',ip:'192.168.100.53',user:'admin',pass:'admin'},
+  {name:'CAM 4',ip:'192.168.100.54',user:'admin',pass:'admin'},
 ];
-
-let cameras      = loadCameras();
-let selectedCam  = 0;
-let presetMode   = 'call';
-let draftCameras = [];
-const NUM_PRESETS = 12;
+var cameras = loadCameras(), selectedCam = 0, presetMode = 'call', draftCameras = [];
+var camStatus = {};
+var videoEnabled = false;
 
 function loadCameras() {
-  try { const s = localStorage.getItem('ptz_cameras'); if (s) return JSON.parse(s); } catch(e) {}
+  try { var s = localStorage.getItem('ptz_cameras'); if (s) return JSON.parse(s); } catch(e){}
   return JSON.parse(JSON.stringify(DEFAULT_CAMS));
 }
 function saveCameras() {
-  try { localStorage.setItem('ptz_cameras', JSON.stringify(cameras)); } catch(e) {}
+  try { localStorage.setItem('ptz_cameras', JSON.stringify(cameras)); } catch(e){}
 }
 
 // ── Theme ──────────────────────────────────────────────────────────
-function loadTheme() {
-  applyTheme(localStorage.getItem('ptz_theme') || 'dark', false);
+function loadTheme() { applyTheme(localStorage.getItem('ptz_theme')||'dark', false); }
+function applyTheme(t, save) {
+  document.documentElement.classList.toggle('light', t==='light');
+  document.getElementById('themeBtn').textContent = t==='light' ? '\uD83C\uDF19' : '\u2600';
+  if (save!==false) localStorage.setItem('ptz_theme', t);
 }
-function applyTheme(theme, save) {
-  if (save === undefined) save = true;
-  document.documentElement.classList.toggle('light', theme === 'light');
-  document.getElementById('themeBtn').textContent = theme === 'light' ? '\uD83C\uDF19' : '\u2600';
-  if (save) localStorage.setItem('ptz_theme', theme);
-}
-function toggleTheme() {
-  applyTheme(document.documentElement.classList.contains('light') ? 'dark' : 'light');
-}
+function toggleTheme() { applyTheme(document.documentElement.classList.contains('light')?'dark':'light'); }
 
 // ── Control mode ───────────────────────────────────────────────────
-function loadCtrlMode() {
-  setCtrlMode(localStorage.getItem('ptz_ctrl_mode') || 'dpad4', false);
+function loadCtrl() { applyCtrl(localStorage.getItem('ptz_ctrl')||'dpad4', false); }
+function applyCtrl(m, save) {
+  document.getElementById('ctrl4').style.display    = m==='dpad4' ? 'grid' : 'none';
+  document.getElementById('ctrl8').style.display    = m==='dpad8' ? 'grid' : 'none';
+  document.getElementById('ctrlJoy').style.display  = m==='joy'   ? 'flex'  : 'none';
+  document.getElementById('btn4').classList.toggle('active',   m==='dpad4');
+  document.getElementById('btn8').classList.toggle('active',   m==='dpad8');
+  document.getElementById('btnJoy').classList.toggle('active', m==='joy');
+  if (save!==false) localStorage.setItem('ptz_ctrl', m);
 }
-function setCtrlMode(mode, save) {
-  if (save === undefined) save = true;
-  document.getElementById('ctrl-dpad4').style.display = mode === 'dpad4' ? 'grid' : 'none';
-  document.getElementById('ctrl-dpad8').style.display = mode === 'dpad8' ? 'grid' : 'none';
-  document.getElementById('ctrl-joy').style.display   = mode === 'joy'   ? 'flex'  : 'none';
-  document.getElementById('ctrlBtn4').classList.toggle('active',   mode === 'dpad4');
-  document.getElementById('ctrlBtn8').classList.toggle('active',   mode === 'dpad8');
-  document.getElementById('ctrlBtnJoy').classList.toggle('active', mode === 'joy');
-  if (save) localStorage.setItem('ptz_ctrl_mode', mode);
+function setCtrl(m) { applyCtrl(m); }
+
+// ── Speeds ─────────────────────────────────────────────────────────
+function loadSpeeds() {
+  var p=localStorage.getItem('ptz_pan'), t=localStorage.getItem('ptz_tilt'), z=localStorage.getItem('ptz_zoom');
+  var pm=localStorage.getItem('ptz_preset_mode');
+  if (p) { document.getElementById('panSpeed').value=p;  document.getElementById('panVal').textContent=p; }
+  if (t) { document.getElementById('tiltSpeed').value=t; document.getElementById('tiltVal').textContent=t; }
+  if (z) { document.getElementById('zoomSpeed').value=z; document.getElementById('zoomVal').textContent=z; }
+  if (pm) applyPresetMode(pm, false);
 }
+function getPan()  { return document.getElementById('panSpeed').value; }
+function getTilt() { return document.getElementById('tiltSpeed').value; }
+function getZoom() { return document.getElementById('zoomSpeed').value; }
 
 // ── Camera selector ────────────────────────────────────────────────
-function renderCamSelector() {
-  const el = document.getElementById('camSelector');
+function renderCams() {
+  var el = document.getElementById('camSelector');
   el.innerHTML = '';
   if (selectedCam >= cameras.length) selectedCam = 0;
   cameras.forEach(function(c, i) {
-    const btn = document.createElement('button');
-    btn.className = 'cam-btn' + (i === selectedCam ? ' active' : '');
-    btn.innerHTML =
-      '<div class="cam-name">' + esc(c.name) + '</div>' +
-      '<div class="cam-ip">' + esc(c.ip) + '</div>' +
-      '<div class="cam-online-dot' + (camOnlineStatus[i] ? ' ' + camOnlineStatus[i] : '') + '" id="cam-dot-' + i + '"></div>';
-    btn.onclick = function() { selectedCam = i; renderCamSelector(); };
-    el.appendChild(btn);
+    var b = document.createElement('button');
+    b.className = 'cam-btn' + (i===selectedCam ? ' active' : '');
+    b.innerHTML =
+      '<div class="cam-name">'+ esc(c.name) +'</div>'+
+      '<div class="cam-ip">'  + esc(c.ip)   +'</div>'+
+      '<div class="cam-dot'   + (camStatus[i]?' '+camStatus[i]:'') +'" id="dot-'+i+'"></div>';
+    b.onclick = function() { selectedCam=i; renderCams(); updateVideo(); };
+    el.appendChild(b);
   });
 }
 
 // ── Presets ────────────────────────────────────────────────────────
 function renderPresets() {
-  const grid = document.getElementById('presetsGrid');
-  grid.innerHTML = '';
-  for (var i = 1; i <= NUM_PRESETS; i++) {
-    (function(num) {
-      const btn = document.createElement('button');
-      btn.className = 'preset-btn' + (presetMode === 'set' ? ' set-mode' : '');
-      btn.textContent = num;
-      btn.onclick = function() { handlePreset(num); };
-      grid.appendChild(btn);
-    })(i);
+  var g = document.getElementById('presetsGrid');
+  g.innerHTML = '';
+  for (var n=1; n<=12; n++) {
+    (function(num){
+      var b = document.createElement('button');
+      b.className = 'preset-btn' + (presetMode==='set'?' set-mode':'');
+      b.textContent = num;
+      b.onclick = function(){ handlePreset(num); };
+      g.appendChild(b);
+    })(n);
   }
 }
-function setPresetMode(mode) {
-  presetMode = mode;
-  document.getElementById('modeBtnCall').classList.toggle('active', mode === 'call');
-  document.getElementById('modeBtnSet').classList.toggle('active',  mode === 'set');
-  localStorage.setItem('ptz_preset_mode', mode);
+function applyPresetMode(m, save) {
+  presetMode = m;
+  document.getElementById('pmCall').classList.toggle('active', m==='call');
+  document.getElementById('pmSet').classList.toggle('active',  m==='set');
+  if (save!==false) localStorage.setItem('ptz_preset_mode', m);
   renderPresets();
 }
-function handlePreset(num) {
-  var action = presetMode === 'call' ? 'poscall' : 'posset';
-  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&' + action + '&' + num);
-  showToast(presetMode === 'set' ? 'Preset ' + num + ' saved' : 'Preset ' + num, 'ok');
+function setPresetMode(m) { applyPresetMode(m); }
+function handlePreset(n) {
+  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&'+(presetMode==='call'?'poscall':'posset')+'&'+n);
+  showToast(presetMode==='set'?'Preset '+n+' saved':'Preset '+n, 'ok');
 }
 
-// ── HTTP CGI ───────────────────────────────────────────────────────
+// ── PTZ commands ───────────────────────────────────────────────────
 function sendPTZ(path) {
   var c = cameras[selectedCam];
-  if (!c || !c.ip) { showToast('No camera IP', 'err'); return; }
-  fetch('http://' + c.ip + path, {
-    credentials: 'include',
-    headers: { 'Authorization': 'Basic ' + btoa(c.user + ':' + c.pass) },
-    mode: 'no-cors'
-  }).catch(function() {});
+  if (!c||!c.ip) { showToast('No camera IP','err'); return; }
+  fetch('http://'+c.ip+path, {
+    credentials:'include',
+    headers:{'Authorization':'Basic '+btoa(c.user+':'+c.pass)},
+    mode:'no-cors'
+  }).catch(function(){});
 }
-function sendHome() {
-  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&home');
-  showToast('Home', 'ok');
-}
+function sendHome() { sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&home'); showToast('Home','ok'); }
 
-// ── D-pad / strip button move ──────────────────────────────────────
-function getPan()  { return document.getElementById('panSpeed').value; }
-function getTilt() { return document.getElementById('tiltSpeed').value; }
-function getZoom() { return document.getElementById('zoomSpeed').value; }
-
+// ── Move buttons ───────────────────────────────────────────────────
 function startMove(btn) {
   btn.classList.add('pressed');
-  var a = btn.dataset.cmdStart, t = btn.dataset.type;
-  if      (t === 'zoom')  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&' + a + '&' + getZoom());
-  else if (t === 'focus') sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&' + a + '&' + getZoom());
-  else                    sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&' + a + '&' + getPan() + '&' + getTilt());
+  var a=btn.dataset.cs, t=btn.dataset.type;
+  if      (t==='zoom')  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&'+a+'&'+getZoom());
+  else if (t==='focus') sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&'+a+'&'+getZoom());
+  else                  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&'+a+'&'+getPan()+'&'+getTilt());
 }
 function stopMove(btn) {
   btn.classList.remove('pressed');
-  if (!btn.dataset.cmdStop) return;
-  if      (btn.dataset.type === 'zoom')  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&zoomstop');
-  else if (btn.dataset.type === 'focus') sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&focusstop');
-  else                                   sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&ptzstop&0&0');
+  if (!btn.dataset.cx) return;
+  if      (btn.dataset.type==='zoom')  sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&zoomstop');
+  else if (btn.dataset.type==='focus') sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&focusstop');
+  else                                 sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&ptzstop&0&0');
 }
-
-function bindMoveButtons() {
-  document.querySelectorAll('[data-cmd-start]').forEach(function(btn) {
+function bindBtns() {
+  document.querySelectorAll('[data-cs]').forEach(function(b) {
     ['touchstart','mousedown'].forEach(function(ev) {
-      btn.addEventListener(ev, function(e) { e.preventDefault(); startMove(btn); });
+      b.addEventListener(ev, function(e){ e.preventDefault(); startMove(b); });
     });
     ['touchend','touchcancel','mouseup','mouseleave'].forEach(function(ev) {
-      btn.addEventListener(ev, function(e) { e.preventDefault(); stopMove(btn); });
+      b.addEventListener(ev, function(e){ e.preventDefault(); stopMove(b); });
     });
   });
 }
 
 // ── Joystick ───────────────────────────────────────────────────────
-(function() {
-  var JOY_R    = 110;
-  var DEAD     = 18;
-  var PUCK_R   = 28;
-  var MAX_R    = JOY_R - PUCK_R;
-  var INTERVAL = 80;
-  var dragging = false, joyTimer = null;
-  var lastPan = 0, lastTilt = 0;
+(function(){
+  var R=110, DEAD=18, PR=28, MAX=R-PR, TICK=80;
+  var dragging=false, timer=null, lp=0, lt=0;
 
-  function xy(e) {
-    var t = e.touches ? e.touches[0] : e;
-    return { x: t.clientX, y: t.clientY };
+  function xy(e){ var t=e.touches?e.touches[0]:e; return{x:t.clientX,y:t.clientY}; }
+
+  function movePuck(cx,cy){
+    var w=document.getElementById('joyWrap');
+    var p=document.getElementById('joyPuck');
+    var ro=document.getElementById('joyReadout');
+    if(!w||!p) return;
+    var r=w.getBoundingClientRect();
+    var dx=cx-(r.left+R), dy=cy-(r.top+R);
+    var dist=Math.sqrt(dx*dx+dy*dy);
+    var ang=Math.atan2(dy,dx);
+    var cl=Math.min(dist,MAX);
+    p.style.left=(R+Math.cos(ang)*cl)+'px';
+    p.style.top =(R+Math.sin(ang)*cl)+'px';
+    if(dist<DEAD){ lp=0;lt=0; if(ro) ro.innerHTML='centered'; return; }
+    var ratio=cl/MAX;
+    lp=Math.round(Math.cos(ang)*parseInt(getPan()) *ratio);
+    lt=Math.round(Math.sin(ang)*parseInt(getTilt())*ratio);
+    var pct=Math.round(ratio*100);
+    var deg=Math.round(((ang*180/Math.PI)+360)%360);
+    var dirs=['R','\u2197','U','\u2196','L','\u2199','D','\u2198'];
+    if(ro) ro.innerHTML='<span class="joy-val">'+dirs[Math.round(deg/45)%8]+'</span> '+pct+'%';
   }
 
-  function movePuck(cx, cy) {
-    var joy  = document.getElementById('joystick');
-    var puck = document.getElementById('joyPuck');
-    var ro   = document.getElementById('joyReadout');
-    if (!joy || !puck) return;
-    var r    = joy.getBoundingClientRect();
-    var dx   = cx - (r.left + JOY_R);
-    var dy   = cy - (r.top  + JOY_R);
-    var dist = Math.sqrt(dx*dx + dy*dy);
-    var ang  = Math.atan2(dy, dx);
-    var cl   = Math.min(dist, MAX_R);
-    puck.style.left = (JOY_R + Math.cos(ang) * cl) + 'px';
-    puck.style.top  = (JOY_R + Math.sin(ang) * cl) + 'px';
-    if (dist < DEAD) {
-      lastPan = 0; lastTilt = 0;
-      if (ro) ro.innerHTML = 'centered';
-      return;
-    }
-    var ratio = cl / MAX_R;
-    lastPan  = Math.round(Math.cos(ang) * parseInt(getPan())  * ratio);
-    lastTilt = Math.round(Math.sin(ang) * parseInt(getTilt()) * ratio);
-    var pct  = Math.round(ratio * 100);
-    var deg  = Math.round(((ang * 180 / Math.PI) + 360) % 360);
-    var dirs = ['R','\u2197','U','\u2196','L','\u2199','D','\u2198'];
-    if (ro) ro.innerHTML = '<span class="joy-val">' + dirs[Math.round(deg/45)%8] + '</span> ' + pct + '%';
+  function sendJoy(){
+    if(lp===0&&lt===0) return;
+    var h=lp>0?'right':lp<0?'left':'';
+    var v=lt>0?'down':lt<0?'up':'';
+    var action=h&&v?h+v:h||v;
+    sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&'+action+'&'+Math.max(1,Math.abs(lp))+'&'+Math.max(1,Math.abs(lt)));
   }
 
-  function sendJoy() {
-    if (lastPan === 0 && lastTilt === 0) return;
-    var h = lastPan  > 0 ? 'right' : lastPan  < 0 ? 'left' : '';
-    var v = lastTilt > 0 ? 'down'  : lastTilt < 0 ? 'up'   : '';
-    var action = (h && v) ? h + v : (h || v);
-    var pa = Math.max(1, Math.abs(lastPan));
-    var ta = Math.max(1, Math.abs(lastTilt));
-    sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&' + action + '&' + pa + '&' + ta);
-  }
-
-  function startJoy(e) {
-    var puck = document.getElementById('joyPuck');
-    if (!puck) return;
-    dragging = true;
-    puck.classList.add('active');
-    var c = xy(e);
-    movePuck(c.x, c.y);
-    joyTimer = setInterval(sendJoy, INTERVAL);
+  function startJoy(e){
+    var p=document.getElementById('joyPuck');
+    if(!p) return;
+    dragging=true; p.classList.add('active');
+    var c=xy(e); movePuck(c.x,c.y);
+    timer=setInterval(sendJoy,TICK);
     e.preventDefault();
   }
-  function moveJoy(e) {
-    if (!dragging) return;
-    var c = xy(e);
-    movePuck(c.x, c.y);
-    e.preventDefault();
-  }
-  function endJoy() {
-    if (!dragging) return;
-    dragging = false;
-    clearInterval(joyTimer); joyTimer = null;
-    lastPan = 0; lastTilt = 0;
+  function moveJoy(e){ if(!dragging) return; var c=xy(e); movePuck(c.x,c.y); e.preventDefault(); }
+  function endJoy(){
+    if(!dragging) return;
+    dragging=false; clearInterval(timer); timer=null; lp=0; lt=0;
     sendPTZ('/cgi-bin/ptzctrl.cgi?ptzcmd&ptzstop&0&0');
-    var puck = document.getElementById('joyPuck');
-    if (puck) {
-      puck.classList.remove('active');
-      puck.style.left = JOY_R + 'px';
-      puck.style.top  = JOY_R + 'px';
-    }
-    var ro = document.getElementById('joyReadout');
-    if (ro) ro.innerHTML = 'drag to move';
+    var p=document.getElementById('joyPuck');
+    if(p){ p.classList.remove('active'); p.style.left=R+'px'; p.style.top=R+'px'; }
+    var ro=document.getElementById('joyReadout');
+    if(ro) ro.innerHTML='drag to move';
   }
 
   document.addEventListener('mousemove',   moveJoy);
   document.addEventListener('mouseup',     endJoy);
-  document.addEventListener('touchmove',   moveJoy, { passive: false });
+  document.addEventListener('touchmove',   moveJoy, {passive:false});
   document.addEventListener('touchend',    endJoy);
   document.addEventListener('touchcancel', endJoy);
 
-  // Called after DOM is ready to attach puck listeners
-  window._bindJoyPuck = function() {
-    var puck = document.getElementById('joyPuck');
-    if (!puck) return;
-    puck.addEventListener('mousedown',  startJoy);
-    puck.addEventListener('touchstart', startJoy, { passive: false });
+  window._bindJoy = function(){
+    var p=document.getElementById('joyPuck');
+    if(!p) return;
+    p.addEventListener('mousedown',  startJoy);
+    p.addEventListener('touchstart', startJoy, {passive:false});
   };
 })();
 
-// ── Toast ──────────────────────────────────────────────────────────
-var toastTimer;
-function showToast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show' + (type ? ' ' + type : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.className = ''; }, 1800);
+// ── Video ──────────────────────────────────────────────────────────
+function loadVideo(){
+  videoEnabled = localStorage.getItem('ptz_video')==='1';
+  document.getElementById('videoToggle').checked = videoEnabled;
+  applyVideo();
+}
+function setVideoEnabled(on){
+  videoEnabled=on; localStorage.setItem('ptz_video',on?'1':'0'); applyVideo();
+}
+function applyVideo(){
+  document.getElementById('videoPanel').style.display = videoEnabled?'flex':'none';
+  if(videoEnabled) updateVideo();
+}
+function updateVideo(){
+  if(!videoEnabled) return;
+  var c=cameras[selectedCam];
+  var feed=document.getElementById('videoFeed');
+  var ph=document.getElementById('videoPH');
+  var nm=document.getElementById('videoPHName');
+  nm.textContent = c?c.name:'';
+  if(!c||!c.ip){ feed.style.display='none'; ph.style.display='flex'; return; }
+  feed.onload  = function(){ ph.style.display='none';  feed.style.display='block'; };
+  feed.onerror = function(){ ph.style.display='flex';  feed.style.display='none';  };
+  ph.style.display='flex'; feed.style.display='none';
+  feed.src = 'http://'+c.ip+'/videostream.cgi?user='+encodeURIComponent(c.user)+'&pwd='+encodeURIComponent(c.pass);
 }
 
+// ── Toast ──────────────────────────────────────────────────────────
+var _tt;
+function showToast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.className='show'+(type?' '+type:'');
+  clearTimeout(_tt); _tt=setTimeout(function(){ t.className=''; },1800);
+}
+
+// ── Online ping ────────────────────────────────────────────────────
+function pingCam(i){
+  var c=cameras[i]; if(!c||!c.ip) return;
+  fetch('http://'+c.ip+'/cgi-bin/param.cgi?get_device_conf',{
+    mode:'no-cors', credentials:'include',
+    headers:{'Authorization':'Basic '+btoa(c.user+':'+c.pass)},
+    cache:'no-store'
+  }).then(function(){ setDot(i,'online'); }).catch(function(){ setDot(i,'offline'); });
+}
+function setDot(i,state){
+  camStatus[i]=state;
+  var d=document.getElementById('dot-'+i);
+  if(d) d.className='cam-dot '+state;
+}
+function pingAll(){ cameras.forEach(function(c,i){ pingCam(i); }); }
+
 // ── Settings modal ─────────────────────────────────────────────────
-function openSettings() {
-  draftCameras = JSON.parse(JSON.stringify(cameras));
-  renderConfigRows();
+function openSettings(){
+  draftCameras=JSON.parse(JSON.stringify(cameras));
+  renderCfgRows();
   document.getElementById('settingsModal').classList.add('open');
 }
-function closeSettings() {
-  document.getElementById('settingsModal').classList.remove('open');
-}
-function renderConfigRows() {
-  var rows = document.getElementById('camConfigRows');
-  rows.innerHTML = '';
-  document.getElementById('camCountDisplay').textContent = draftCameras.length;
-  document.getElementById('removeCamBtn').disabled = draftCameras.length <= 1;
-  draftCameras.forEach(function(c, i) {
-    var row = document.createElement('div');
-    row.className = 'cam-config-row';
-    row.dataset.idx = i;
-    row.innerHTML =
-      '<span class="row-num">' + (i+1) + '</span>' +
-      '<input class="cfg-input" placeholder="CAM ' + (i+1) + '" value="' + esc(c.name) + '" data-field="name">' +
-      '<input class="cfg-input" placeholder="192.168.100.5' + (i+1) + '" value="' + esc(c.ip) + '" data-field="ip">' +
-      '<input class="cfg-input creds-input" placeholder="admin:admin" value="' + esc(c.user) + ':' + esc(c.pass) + '" data-field="creds">' +
-      '<button class="del-btn" data-delidx="' + i + '" title="Remove">&#10005;</button>';
-    rows.appendChild(row);
+function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
+
+function renderCfgRows(){
+  var el=document.getElementById('cfgRows');
+  el.innerHTML='';
+  document.getElementById('camCountNum').textContent=draftCameras.length;
+  document.getElementById('removeCamBtn').disabled=draftCameras.length<=1;
+  draftCameras.forEach(function(c,i){
+    var row=document.createElement('div');
+    row.className='cfg-row'; row.dataset.idx=i;
+    row.innerHTML=
+      '<span class="cfg-num">'+(i+1)+'</span>'+
+      '<input class="cfg-in" placeholder="CAM '+(i+1)+'" value="'+esc(c.name)+'" data-f="name">'+
+      '<input class="cfg-in" placeholder="192.168.100.5'+(i+1)+'" value="'+esc(c.ip)+'" data-f="ip">'+
+      '<input class="cfg-in ci" placeholder="admin:admin" value="'+esc(c.user)+':'+esc(c.pass)+'" data-f="creds">'+
+      '<button class="del-btn" data-di="'+i+'" title="Remove">&#10005;</button>';
+    el.appendChild(row);
   });
-  rows.querySelectorAll('.del-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
+  el.querySelectorAll('.del-btn').forEach(function(b){
+    b.addEventListener('click',function(){
       flushDraft();
-      draftCameras.splice(parseInt(btn.dataset.delidx), 1);
-      renderConfigRows();
+      draftCameras.splice(parseInt(b.dataset.di),1);
+      renderCfgRows();
     });
   });
 }
-function flushDraft() {
-  document.querySelectorAll('.cam-config-row').forEach(function(row) {
-    var i = parseInt(row.dataset.idx);
-    if (isNaN(i) || i >= draftCameras.length) return;
-    row.querySelectorAll('[data-field]').forEach(function(inp) {
-      var f = inp.dataset.field;
-      if (f === 'name')  draftCameras[i].name = inp.value.trim() || ('CAM ' + (i+1));
-      if (f === 'ip')    draftCameras[i].ip   = inp.value.trim();
-      if (f === 'creds') {
-        var parts = inp.value.split(':');
-        draftCameras[i].user = parts[0].trim() || 'admin';
-        draftCameras[i].pass = parts.slice(1).join(':').trim() || 'admin';
+function flushDraft(){
+  document.querySelectorAll('.cfg-row').forEach(function(row){
+    var i=parseInt(row.dataset.idx);
+    if(isNaN(i)||i>=draftCameras.length) return;
+    row.querySelectorAll('[data-f]').forEach(function(inp){
+      var f=inp.dataset.f;
+      if(f==='name')  draftCameras[i].name=inp.value.trim()||'CAM '+(i+1);
+      if(f==='ip')    draftCameras[i].ip=inp.value.trim();
+      if(f==='creds'){
+        var pts=inp.value.split(':');
+        draftCameras[i].user=pts[0].trim()||'admin';
+        draftCameras[i].pass=pts.slice(1).join(':').trim()||'admin';
       }
     });
   });
 }
-function addCam() {
+function addCam(){
   flushDraft();
-  var n = draftCameras.length + 1;
-  draftCameras.push({ name:'CAM ' + n, ip:'', user:'admin', pass:'admin' });
-  renderConfigRows();
+  var n=draftCameras.length+1;
+  draftCameras.push({name:'CAM '+n,ip:'',user:'admin',pass:'admin'});
+  renderCfgRows();
 }
-function removeCam() {
-  if (draftCameras.length <= 1) return;
+function removeCam(){
+  if(draftCameras.length<=1) return;
+  flushDraft(); draftCameras.pop(); renderCfgRows();
+}
+function saveSettings(){
   flushDraft();
-  draftCameras.pop();
-  renderConfigRows();
+  cameras=draftCameras;
+  if(selectedCam>=cameras.length) selectedCam=cameras.length-1;
+  saveCameras(); renderCams(); closeSettings();
+  showToast('Settings saved','ok');
+  pingAll();
 }
-function saveSettings() {
-  flushDraft();
-  cameras = draftCameras;
-  if (selectedCam >= cameras.length) selectedCam = cameras.length - 1;
-  saveCameras();
-  renderCamSelector();
-  closeSettings();
-  showToast('Settings saved', 'ok');
-  pingAllCameras();
-}
-document.getElementById('settingsModal').addEventListener('click', function(e) {
-  if (e.target === this) closeSettings();
+document.getElementById('settingsModal').addEventListener('click',function(e){
+  if(e.target===this) closeSettings();
 });
 
-// ── PWA install banner ─────────────────────────────────────────────
-(function() {
-  var isIOS       = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  var isStandalone = ('standalone' in navigator) && navigator.standalone;
-  var dismissed   = localStorage.getItem('ptz_banner_dismissed');
-  if (isIOS && !isStandalone && !dismissed) {
-    setTimeout(function() {
-      document.getElementById('install-banner').classList.add('visible');
-    }, 2000);
+// ── PWA banner ─────────────────────────────────────────────────────
+(function(){
+  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isSA=('standalone' in navigator)&&navigator.standalone;
+  if(isIOS&&!isSA&&!localStorage.getItem('ptz_banner')){
+    setTimeout(function(){ document.getElementById('install-banner').classList.add('visible'); },2000);
   }
 })();
-function dismissBanner() {
+function dismissBanner(){
   document.getElementById('install-banner').classList.remove('visible');
-  localStorage.setItem('ptz_banner_dismissed', '1');
+  localStorage.setItem('ptz_banner','1');
 }
 
 // ── Service Worker ─────────────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').catch(function(e) {
-      console.log('SW registration failed:', e);
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(e){
+      console.log('SW failed:',e);
     });
   });
 }
 
-// ── Speed & preset mode persistence ───────────────────────────────
-function loadSpeeds() {
-  var pan  = localStorage.getItem('ptz_pan_speed');
-  var tilt = localStorage.getItem('ptz_tilt_speed');
-  var zoom = localStorage.getItem('ptz_zoom_speed');
-  var pm   = localStorage.getItem('ptz_preset_mode');
-  if (pan)  { document.getElementById('panSpeed').value  = pan;  document.getElementById('panSpeedVal').textContent  = pan; }
-  if (tilt) { document.getElementById('tiltSpeed').value = tilt; document.getElementById('tiltSpeedVal').textContent = tilt; }
-  if (zoom) { document.getElementById('zoomSpeed').value = zoom; document.getElementById('zoomSpeedVal').textContent = zoom; }
-  if (pm)   setPresetMode(pm);
-}
-
-// ── Camera online ping ─────────────────────────────────────────────
-// Uses no-cors fetch to the camera's info endpoint. An opaque response
-// (fetch resolves) means the camera is reachable. A network error
-// (fetch rejects) means it isn't. Response body is never read.
-var camOnlineStatus = {};
-
-function pingCamera(i) {
-  var c = cameras[i];
-  if (!c || !c.ip) return;
-  fetch('http://' + c.ip + '/cgi-bin/param.cgi?get_device_conf', {
-    mode: 'no-cors',
-    credentials: 'include',
-    headers: { 'Authorization': 'Basic ' + btoa(c.user + ':' + c.pass) },
-    cache: 'no-store'
-  }).then(function() {
-    setDotState(i, 'online');
-  }).catch(function() {
-    setDotState(i, 'offline');
-  });
-}
-
-function setDotState(i, state) {
-  camOnlineStatus[i] = state;
-  var dot = document.getElementById('cam-dot-' + i);
-  if (!dot) return;
-  dot.className = 'cam-online-dot ' + state;
-}
-
-function pingAllCameras() {
-  cameras.forEach(function(c, i) { pingCamera(i); });
-}
-
 // ── Init ───────────────────────────────────────────────────────────
 loadTheme();
-loadCtrlMode();
+loadCtrl();
 loadSpeeds();
-renderCamSelector();
+loadVideo();
+renderCams();
 renderPresets();
-bindMoveButtons();
-window._bindJoyPuck();
-pingAllCameras();
-setInterval(pingAllCameras, 10000);
+bindBtns();
+window._bindJoy();
+pingAll();
+setInterval(pingAll, 10000);
 </script>
 </body>
 </html>
