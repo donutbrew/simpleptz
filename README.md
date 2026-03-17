@@ -21,7 +21,7 @@ A browser-based PTZ camera controller for SMTAV IP cameras, optimized for iPad u
 Open the GitHub Pages URL on your iPad and bookmark it:
 
 ```
-https://[username].github.io/[repo-name]/
+https://donutbrew.github.io/simpleptz/
 ```
 
 Tap **⚙** to configure camera names, IP addresses, and credentials. Tap **☀/🌙** to toggle light/dark mode.
