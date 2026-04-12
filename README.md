@@ -23,6 +23,16 @@ Open the GitHub Pages URL on your iPad and bookmark it:
 ```
 https://donutbrew.github.io/simpleptz/
 ```
+**IMPORTANT** most browsers will not allow you to load this as an https page and then access insecure http
+endpoints (such as a PTZ camera http server). You can avoid this by running the app locally on a PC. 
+
+You can serve it locally by running:
+```
+python ./app.py
+
+```
+Then point your iPad or other device to that web address. I'd recommend adding it you add it to your home screen 
+(create a web app).
 
 Tap **⚙** to configure camera names, IP addresses, and credentials. Tap **☀/🌙** to toggle light/dark mode.
 
