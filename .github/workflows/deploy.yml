@@ -3,19 +3,42 @@ name: Deploy to GitHub Pages
 on:
   push:
     tags:
-      - 'v*'   # runs when you push tags like v1.2.0
+      - '*'   # run on any tag push
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy (e.g. v1.2.0)'
+        required: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     permissions:
+      contents: read
       pages: write
       id-token: write
 
     steps:
-      - name: Checkout
+      - name: Checkout tag (push)
+        if: github.event_name == 'push'
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Checkout tag (manual)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ github.event.inputs.tag }}
+
+      - name: Debug info
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Tag input: ${{ github.event.inputs.tag }}"
+          git log -1 --oneline
+          ls -la
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -31,7 +54,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist   # change if your build output is different
+          path: ./dist   # ⚠️ change if your build output differs
 
       - name: Deploy
         uses: actions/deploy-pages@v4
