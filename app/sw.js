@@ -3,7 +3,7 @@
 // Bump CACHE_VERSION to force a cache refresh after updates.
 
 const CACHE_PREFIX  = 'simpleptz-';
-const CACHE_VERSION = 'simpleptz-v2';
+const CACHE_VERSION = 'simpleptz-v3';
 
 const PRECACHE = [
   './',
