@@ -1,4 +1,4 @@
-import http.server, socket, functools, webbrowser, argparse, configparser
+import http.server, socket, functools, webbrowser, argparse, configparser, subprocess, sys
 
 
 def get_ip():
@@ -14,14 +14,14 @@ def get_browser():
 
 
 def open_browser(url, browser):
-    browser_keys = {
-        "edge": "windows-default",
-        "chrome": "chrome",
-        "firefox": "firefox",
-    }
-    key = browser_keys.get(browser, "windows-default")
+    if browser == "edge":
+        if sys.platform == "win32":
+            subprocess.run(f'start microsoft-edge:{url}', shell=True)
+        else:
+            webbrowser.open(url)
+        return
     try:
-        webbrowser.get(key).open(url)
+        webbrowser.get(browser).open(url)
     except webbrowser.Error:
         print(f"Browser '{browser}' not found, falling back to system default.")
         webbrowser.open(url)
