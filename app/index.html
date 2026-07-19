@@ -67,7 +67,7 @@ body::before {
 }
 .app {
   position: relative; z-index: 1;
-  max-width: 900px; margin: 0 auto; padding: 12px;
+  max-width: 400px; margin: 0 auto; padding: 12px;
   display: flex; flex-direction: column; gap: 12px;
 }
 
@@ -248,8 +248,7 @@ header {
 
 /* ── Zoom / Focus ── */
 .zf-wrap {
-  /* same width as dpad column */
-  width: 224px;
+  width: 100%;
   display: flex; flex-direction: column; gap: 4px;
 }
 .zf-group { display: flex; gap: 6px; flex: 1; }
@@ -282,7 +281,6 @@ header {
 .speed-panel {
   background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
   padding: 10px 12px; display: flex; flex-direction: column; gap: 8px;
-  align-self: start;
 }
 .speed-title { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; }
 .speed-row { display: flex; align-items: center; gap: 8px; }
@@ -441,8 +439,7 @@ input[type=range]::-webkit-slider-thumb {
 @media (max-width: 520px) {
   .dpad  { grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px 64px; }
   .dpad.d8 { grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px 64px; }
-  .two-col { grid-template-columns: 216px 1fr; }
-  .pt-wrap, .zf-wrap { width: 216px; }
+  .pt-wrap { width: 216px; }
   .cfg-hdrs { grid-template-columns: 20px 1fr 1fr 28px; }
   .cfg-hdrs .ch { display: none; }
   .cfg-row  { grid-template-columns: 20px 1fr 1fr 28px; }
@@ -502,8 +499,8 @@ input[type=range]::-webkit-slider-thumb {
   <!-- ── Camera selector ── -->
   <div class="cam-selector" id="camSelector"></div>
 
-  <!-- ── Row 1: Pan/Tilt | Video ── -->
-  <div class="two-col" id="row1">
+  <!-- ── Row 1: Pan/Tilt ── -->
+  <div id="row1">
     <!-- Pan/Tilt -->
     <div class="pt-wrap">
       <div class="pt-header">
@@ -552,48 +549,22 @@ input[type=range]::-webkit-slider-thumb {
 
   </div>
 
-  <!-- ── Row 2: Zoom+Focus | Speed ── -->
-  <div class="two-col">
-    <!-- Zoom + Focus -->
-    <div class="zf-wrap">
-      <div class="zf-group">
-        <div class="zf-col zoom-col">
-          <div class="zf-label">Zoom</div>
-          <div class="zf-col-btns">
-            <button class="zf-btn zoom"  data-cs="zoomin"   data-cx="zoomstop"  data-type="zoom">&#128269; TELE</button>
-            <button class="zf-btn zoom"  data-cs="zoomout"  data-cx="zoomstop"  data-type="zoom">&#128301; WIDE</button>
-          </div>
-        </div>
-        <div class="zf-col focus-col">
-          <div class="zf-label">Focus</div>
-          <div class="zf-col-btns">
-            <button class="zf-btn focus" data-cs="focusin"  data-cx="focusstop" data-type="focus">NEAR</button>
-            <button class="zf-btn focus" data-cs="focusout" data-cx="focusstop" data-type="focus">FAR</button>
-          </div>
+  <!-- ── Row 2: Zoom+Focus ── -->
+  <div class="zf-wrap">
+    <div class="zf-group">
+      <div class="zf-col zoom-col">
+        <div class="zf-label">Zoom</div>
+        <div class="zf-col-btns">
+          <button class="zf-btn zoom"  data-cs="zoomin"   data-cx="zoomstop"  data-type="zoom">&#128269; TELE</button>
+          <button class="zf-btn zoom"  data-cs="zoomout"  data-cx="zoomstop"  data-type="zoom">&#128301; WIDE</button>
         </div>
       </div>
-    </div>
-
-    <!-- Speed -->
-    <div class="speed-panel">
-      <div class="speed-title">Speed</div>
-      <div class="speed-row">
-        <label>PAN</label>
-        <input type="range" id="panSpeed" min="1" max="24" value="8"
-          oninput="document.getElementById('panVal').textContent=this.value;localStorage.setItem('ptz_pan',this.value)">
-        <div class="speed-val" id="panVal">8</div>
-      </div>
-      <div class="speed-row">
-        <label>TILT</label>
-        <input type="range" id="tiltSpeed" min="1" max="20" value="6"
-          oninput="document.getElementById('tiltVal').textContent=this.value;localStorage.setItem('ptz_tilt',this.value)">
-        <div class="speed-val" id="tiltVal">6</div>
-      </div>
-      <div class="speed-row">
-        <label>ZOOM</label>
-        <input type="range" id="zoomSpeed" min="1" max="7" value="3"
-          oninput="document.getElementById('zoomVal').textContent=this.value;localStorage.setItem('ptz_zoom',this.value)">
-        <div class="speed-val" id="zoomVal">3</div>
+      <div class="zf-col focus-col">
+        <div class="zf-label">Focus</div>
+        <div class="zf-col-btns">
+          <button class="zf-btn focus" data-cs="focusin"  data-cx="focusstop" data-type="focus">NEAR</button>
+          <button class="zf-btn focus" data-cs="focusout" data-cx="focusstop" data-type="focus">FAR</button>
+        </div>
       </div>
     </div>
   </div>
@@ -608,6 +579,29 @@ input[type=range]::-webkit-slider-thumb {
       </div>
     </div>
     <div class="presets-grid" id="presetsGrid"></div>
+  </div>
+
+  <!-- ── Speed ── -->
+  <div class="speed-panel">
+    <div class="speed-title">Speed</div>
+    <div class="speed-row">
+      <label>PAN</label>
+      <input type="range" id="panSpeed" min="1" max="24" value="8"
+        oninput="document.getElementById('panVal').textContent=this.value;localStorage.setItem('ptz_pan',this.value)">
+      <div class="speed-val" id="panVal">8</div>
+    </div>
+    <div class="speed-row">
+      <label>TILT</label>
+      <input type="range" id="tiltSpeed" min="1" max="20" value="6"
+        oninput="document.getElementById('tiltVal').textContent=this.value;localStorage.setItem('ptz_tilt',this.value)">
+      <div class="speed-val" id="tiltVal">6</div>
+    </div>
+    <div class="speed-row">
+      <label>ZOOM</label>
+      <input type="range" id="zoomSpeed" min="1" max="7" value="3"
+        oninput="document.getElementById('zoomVal').textContent=this.value;localStorage.setItem('ptz_zoom',this.value)">
+      <div class="speed-val" id="zoomVal">3</div>
+    </div>
   </div>
 
 </div><!-- /.app -->
