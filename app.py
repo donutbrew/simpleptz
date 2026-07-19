@@ -14,13 +14,18 @@ def get_browser():
 
 
 def open_browser(url, browser):
-    if browser == "chrome":
-        b = webbrowser.get("chrome")
-    elif browser == "firefox":
-        b = webbrowser.get("firefox")
-    else:
-        b = webbrowser.get("windows-default")
-    b.open(url)
+    try:
+        if browser == "chrome":
+            b = webbrowser.get("chrome")
+        elif browser == "firefox":
+            b = webbrowser.get("firefox")
+        else:
+            webbrowser.open(url)
+            return
+        b.open(url)
+    except webbrowser.Error:
+        print(f"Browser '{browser}' not found, falling back to system default.")
+        webbrowser.open(url)
 
 
 parser = argparse.ArgumentParser()
