@@ -14,15 +14,14 @@ def get_browser():
 
 
 def open_browser(url, browser):
+    browser_keys = {
+        "edge": "windows-default",
+        "chrome": "chrome",
+        "firefox": "firefox",
+    }
+    key = browser_keys.get(browser, "windows-default")
     try:
-        if browser == "chrome":
-            b = webbrowser.get("chrome")
-        elif browser == "firefox":
-            b = webbrowser.get("firefox")
-        else:
-            webbrowser.open(url)
-            return
-        b.open(url)
+        webbrowser.get(key).open(url)
     except webbrowser.Error:
         print(f"Browser '{browser}' not found, falling back to system default.")
         webbrowser.open(url)
