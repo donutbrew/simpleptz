@@ -34,6 +34,22 @@ python ./app.py
 Then point your iPad or other device to that web address. I'd recommend adding it you add it to your home screen 
 (create a web app).
 
+### Browser selection
+
+When double-clicking `app.py` on Windows, it opens the app in a browser window automatically. The browser used is controlled by `config.ini` in the same directory:
+
+```ini
+[app]
+# Options: edge, chrome, firefox
+browser = edge
+```
+
+- `edge` (default) — opens in Microsoft Edge as an app window
+- `chrome` — opens in Google Chrome
+- `firefox` — opens in Mozilla Firefox
+
+Edit `config.ini` to change the browser. Run with `--server` to skip opening a browser entirely.
+
 Tap **⚙** to configure camera names, IP addresses, and credentials. Tap **☀/🌙** to toggle light/dark mode.
 
 ### Selecting a camera
@@ -157,6 +173,8 @@ app/
   manifest.json     # PWA manifest
   icon-192.png      # Home Screen icon (192×192)
   icon-512.png      # Home Screen icon (512×512)
+app.py              # Local server script
+config.ini          # Local server configuration (browser selection)
 README.md
 ```
 
